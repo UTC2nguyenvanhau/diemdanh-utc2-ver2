@@ -3,22 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Điểm Danh UTC2</title>
+    <title>Hệ Thống Điểm Danh UTC2 - 3D Soft</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #0056b3;
-            --secondary: #00a8ff;
-            --bg: #f0f2f5;
-            --card: #ffffff;
-            --success: #27ae60;
+            --bg-color: #eaf1f9;
+            --card-color: #ffffff;
+            --primary-color: #00306e;
+            --accent-color: #70baff;
+            --success: #2ecc71;
             --error: #e74c3c;
+            
+            --light-shadow: -8px -8px 16px rgba(255, 255, 255, 1);
+            --dark-shadow: 8px 8px 16px rgba(0, 48, 110, 0.08);
+            --inset-light: inset -5px -5px 10px rgba(255, 255, 255, 1);
+            --inset-dark: inset 5px 5px 10px rgba(0, 48, 110, 0.05);
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            background-image: radial-gradient(circle at 2px 2px, #d1d1d1 1px, transparent 0);
-            background-size: 40px 40px;
+            /* Áp dụng font Nunito cho toàn bộ trang web */
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -26,65 +36,186 @@
             margin: 0;
         }
 
-        .attendance-card {
-            background: var(--card);
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 380px;
+        .neumorphic-card-light {
+            background: var(--card-color);
+            padding: 40px 30px;
+            border-radius: 35px;
+            box-shadow: var(--dark-shadow), var(--light-shadow);
+            width: 90%;
+            max-width: 400px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         .logo-container {
-            margin-bottom: 20px;
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 30px auto;
+            border-radius: 50%;
+            background: var(--card-color);
+            box-shadow: 6px 6px 12px rgba(0, 48, 110, 0.1), 
+                       -6px -6px 12px rgba(255, 255, 255, 1);
             display: flex;
+            align-items: center;
             justify-content: center;
+            animation: float-light 6s ease-in-out infinite;
+        }
+
+        @keyframes float-light {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+            100% { transform: translateY(0px); }
         }
 
         .logo-school {
-            width: 120px; /* Kích thước vừa vặn cho điện thoại */
+            width: 125px;
             height: auto;
-            transition: transform 0.5s ease;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-        }
-
-        .logo-school:hover {
-            transform: scale(1.1) rotate(3deg);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
         h2 {
-            color: var(--primary);
-            margin: 10px 0 5px 0;
-            font-size: 20px;
+            font-size: 24px;
+            font-weight: 900; /* Font chữ dày, bo tròn nhìn rất chắc chắn */
+            margin: 0 0 8px 0;
+            color: var(--primary-color);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 800;
+            letter-spacing: 1.5px;
         }
 
         .uni-name {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 18px;
+            /* Đổi nền hơi xanh nhạt để tách biệt khỏi nền trắng của thẻ */
+            background: #f4f8fd; 
+            /* Thêm đường viền rõ ràng nhưng vẫn dịu mắt */
+            border: 2px solid #dce6f2; 
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-align: center;
+            box-sizing: border-box;
+            /* Giữ lại hiệu ứng lõm nhẹ 3D */
+            box-shadow: inset 3px 3px 6px rgba(0, 48, 110, 0.05), 
+                        inset -3px -3px 6px rgba(255, 255, 255, 1);
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        input::placeholder {
+            color: #9aa8b6; /* Làm màu chữ placeholder rõ nét hơn một chút */
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Hiệu ứng khi bấm vào để gõ chữ */
+        input:focus {
+            background: #ffffff; /* Nền sáng bừng lên trắng tinh */
+            border-color: var(--accent-color); /* Viền chuyển sang xanh dương */
+            /* Đổ bóng phát sáng ra ngoài (Glow effect) */
+            box-shadow: 0 0 0 4px rgba(112, 186, 255, 0.25),
+                        inset 2px 2px 4px rgba(0, 48, 110, 0.03); 
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #70baff 0%, #a2d6ff 100%);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 20px;
+            font-size: 17px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px rgba(0, 48, 110, 0.2), 
+                       -5px -5px 10px rgba(255, 255, 255, 1);
+            transition: all 0.2s ease;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:active {
+            background: linear-gradient(135deg, #a2d6ff 0%, #70baff 100%);
+            box-shadow: inset 5px 5px 10px rgba(0, 48, 110, 0.2), 
+                        inset -5px -5px 10px rgba(255, 255, 255, 1);
+            transform: translateY(2px) scale(0.99);
+        }
+
+        button:disabled {
+            background: #e0e0e0;
+            color: #b0bec5;
+            cursor: not-allowed;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            transform: none;
+        }
+
+        #status-container {
+            margin-top: 30px;
+            min-height: 50px;
+            font-size: 16px;
+            font-weight: 800;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .loader {
+            display: none;
+            width: 28px;
+            height: 28px;
+            border: 4px solid var(--bg-color);
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            margin-top: 40px;
             font-size: 12px;
-            color: #555;
-            margin-bottom: 25px;
-            font-weight: 600;
-            line-height: 1.4;
+            color: #b0bec5;
+            line-height: 1.6;
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
 
-<div class="attendance-card">
+<div class="neumorphic-card-light">
     <div class="logo-container">
         <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/03/Logo-Dai-Hoc-Giao-Thong-Van-Tai-UTC.png" class="logo-school" alt="UTC Logo">
     </div>
     
     <h2>ĐIỂM DANH SINH VIÊN</h2>
-    <div class="uni-name">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI<br>PHÂN HIỆU TẠI TP. HỒ CHÍ MINH</div>
+    <div class="uni-name">TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI<br>PHÂN HIỆU UTC2 TẠI TP.HCM</div>
 
-    <div class="input-box">
-        <input type="number" id="mssv" placeholder="Nhập MSSV của bạn" autocomplete="off">
+    <div class="input-group">
+        <input type="number" id="mssv" placeholder="Nhập MSSV" autocomplete="off">
     </div>
 
     <button onclick="handleAttendance()" id="btnSubmit">
@@ -93,17 +224,16 @@
 
     <div id="status-container">
         <div class="loader" id="spinner"></div>
-        <div id="status">Sẵn sàng điểm danh</div>
+        <div id="status">Sẵn sàng kết nối trạm điểm danh</div>
     </div>
 
     <div class="footer">
-        © 2026 Nghiên cứu khoa học_ Made by University of Transport and Communications - Campus in Ho Chi Minh City <br>
-        Bảo mật 2 lớp: Phần cứng BLE + Cloud Anti-Cheat
+        © 2026 Nghiên cứu khoa học<br>
+        Bảo mật 2 lớp: ESP32 BLE + Cloud Anti-Cheat
     </div>
 </div>
 
 <script>
-    // DÁN LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwB3JIlliq5Qsd53uEH6UdsxS-WjNE6yO4DQkTeeYYbNuNeSiNEul4XWzZoOVLIMua8/exec'; 
     const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
     const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
@@ -132,33 +262,30 @@
         try {
             btn.disabled = true;
             loader.style.display = "block";
-            status.style.color = "var(--primary)";
+            status.style.color = "var(--primary-color)";
             status.innerText = "🔍 Đang tìm Trạm BLE...";
 
-            // 1. Quét Bluetooth
             const device = await navigator.bluetooth.requestDevice({
                 filters: [{ name: 'TRAM-DIEM-DANH' }],
                 optionalServices: [SERVICE_UUID]
             });
 
-            status.innerText = "🔗 Đang bắt tay bảo mật...";
+            status.innerText = "🔗 Đang kiểm tra bảo mật...";
             const server = await device.gatt.connect();
             const service = await server.getPrimaryService(SERVICE_UUID);
             const characteristic = await service.getCharacteristic(CHAR_UUID);
 
-            // 2. Trao đổi mã Challenge/Response
             const challenge = Math.floor(Math.random() * 9000) + 1000;
             const encoder = new TextEncoder();
             await characteristic.writeValue(encoder.encode(challenge.toString()));
             
-            await new Promise(r => setTimeout(r, 250)); // Chờ ESP32 tính toán
+            await new Promise(r => setTimeout(r, 250)); 
 
             const value = await characteristic.readValue();
             const response = new TextDecoder().decode(value);
             
             device.gatt.disconnect();
 
-            // 3. Gửi lên Google Sheets
             status.innerText = "☁️ Đang đồng bộ Cloud...";
             const deviceId = getDeviceId();
             const finalUrl = `${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
@@ -171,8 +298,8 @@
 
             if (result.includes("Thành công")) {
                 status.style.color = "var(--success)";
-                status.innerHTML = "🎉 " + result;
-                document.getElementById('mssv').value = ""; // Xóa mssv sau khi thành công
+                status.innerHTML = "✅ " + result;
+                document.getElementById('mssv').value = ""; 
             } else {
                 status.style.color = "var(--error)";
                 status.innerHTML = "⚠️ " + result;
