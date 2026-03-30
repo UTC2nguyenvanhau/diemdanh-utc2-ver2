@@ -24,7 +24,7 @@
         }
 
         body {
-            /* Ép font Roboto cho toàn bộ trang */
+           
             font-family: 'Roboto', sans-serif;
             background-color: var(--bg-color);
             color: var(--primary-color);
@@ -35,23 +35,23 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-            position: relative; /* Để dải ruy băng căn theo body */
+            position: relative; 
         }
 
         .neumorphic-card-light {
             background: var(--card-color);
-            padding: 55px 30px; /* Tăng padding trên để né ruy băng */
+            padding: 55px 30px;
             border-radius: 30px;
             box-shadow: var(--dark-shadow), var(--light-shadow);
             width: 100%;
             max-width: 400px;
             text-align: center;
             box-sizing: border-box;
-            position: relative; /* Để ruy băng căn theo card */
-            overflow: hidden; /* Cắt phần ruy băng thừa */
+            position: relative; 
+            overflow: hidden; 
         }
 
-        /* Dải ruy băng mừng ngày 30/4 */
+       
         .celebration-ribbon {
             position: absolute;
             top: 15px;
@@ -80,11 +80,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            /* HỒI SINH HIỆU ỨNG BỒNG BỀNH */
+           
             animation: float-light 6s ease-in-out infinite;
         }
 
-        /* Định nghĩa hiệu ứng bồng bềnh (Float) */
+        
         @keyframes float-light {
             0% { transform: translateY(0px); }
             50% { transform: translateY(-12px) rotate(3deg); } /* Lên và xoay nhẹ */
@@ -120,7 +120,7 @@
 
         input {
             width: 100%;
-            height: 55px; /* Cố định chiều cao để chữ luôn ở giữa */
+            height: 55px; 
             background: #f4f8fd; 
             border: 2px solid #e0e9f5; 
             border-radius: 15px;
@@ -151,7 +151,7 @@
 
         button {
             width: 100%;
-            height: 55px; /* Chiều cao bằng ô input cho cân đối */
+            height: 55px; 
             background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%);
             color: #ffffff;
             border: none;
@@ -242,6 +242,7 @@
 
     <div class="footer">
         Chào mừng 51 năm Ngày Giải phóng miền Nam (30/4/1975 - 30/4/2026)<br>
+        © 2026 Nghiên cứu khoa học
         Bảo mật: ESP32 BLE + Cloud Anti-Cheat
     </div>
 </div>
@@ -285,7 +286,7 @@
                 optionalServices: [SERVICE_UUID]
             });
 
-            status.innerText = "🔗 Bắt tay bảo mật...";
+            status.innerText = "🔗 Kiểm tra bảo mật...";
             const server = await device.gatt.connect();
             const service = await server.getPrimaryService(SERVICE_UUID);
             const characteristic = await service.getCharacteristic(CHAR_UUID);
