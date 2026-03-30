@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <style>
+        /* CHẾ ĐỘ SÁNG (MẶC ĐỊNH) */
         :root {
             --bg-color: #eaf1f9;
             --card-color: #ffffff;
@@ -17,14 +18,32 @@
             --accent-color: #4da6ff;
             --success: #27ae60;
             --error: #e74c3c;
-            --golden: #f1c40f; /* Màu vàng kim cho chi tiết trang trọng */
+            --golden: #f1c40f;
+            --input-bg: #f4f8fd;
+            --input-border: #e0e9f5;
             
             --light-shadow: -8px -8px 16px rgba(255, 255, 255, 0.8);
             --dark-shadow: 8px 8px 16px rgba(0, 51, 102, 0.1);
+            --inset-light: inset -4px -4px 8px rgba(255, 255, 255, 1);
+            --inset-dark: inset 4px 4px 8px rgba(0, 51, 102, 0.05);
+        }
+
+        /* CHẾ ĐỘ TỐI (DARK MODE) */
+        body.dark-mode {
+            --bg-color: #1a1e24;
+            --card-color: #1a1e24;
+            --primary-color: #e0e9f5; /* Chữ màu sáng */
+            --accent-color: #66b3ff;
+            --input-bg: #14171c; /* Nền ô nhập liệu tối hơn nền xíu */
+            --input-border: #232830;
+            
+            --light-shadow: -8px -8px 16px rgba(255, 255, 255, 0.03); /* Bóng sáng mờ đi */
+            --dark-shadow: 8px 8px 16px rgba(0, 0, 0, 0.4); /* Bóng tối đậm lên */
+            --inset-light: inset -4px -4px 8px rgba(255, 255, 255, 0.02);
+            --inset-dark: inset 4px 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         body {
-           
             font-family: 'Roboto', sans-serif;
             background-color: var(--bg-color);
             color: var(--primary-color);
@@ -35,23 +54,79 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-            position: relative; 
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         .neumorphic-card-light {
             background: var(--card-color);
-            padding: 55px 30px;
+            padding: 55px 30px 40px 30px;
             border-radius: 30px;
             box-shadow: var(--dark-shadow), var(--light-shadow);
             width: 100%;
             max-width: 400px;
             text-align: center;
             box-sizing: border-box;
-            position: relative; 
-            overflow: hidden; 
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
         }
 
-       
+        /* Công tắc Dark Mode */
+        .theme-switch-wrapper {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 46px;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: #cbd4db;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 24px;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .slider:before {
+            background-color: #fff;
+            bottom: 3px;
+            content: "";
+            height: 18px;
+            left: 3px;
+            position: absolute;
+            transition: .4s;
+            width: 18px;
+            border-radius: 50%;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Dải ruy băng mừng ngày 30/4 */
         .celebration-ribbon {
             position: absolute;
             top: 15px;
@@ -64,8 +139,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             transform: rotate(45deg);
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
             z-index: 10;
         }
 
@@ -75,19 +149,17 @@
             margin: 0 auto 25px auto;
             border-radius: 50%;
             background: var(--card-color);
-            box-shadow: 6px 6px 12px rgba(0, 51, 102, 0.08), 
-                       -6px -6px 12px rgba(255, 255, 255, 0.9);
+            box-shadow: var(--dark-shadow), var(--light-shadow);
             display: flex;
             align-items: center;
             justify-content: center;
-           
             animation: float-light 6s ease-in-out infinite;
+            transition: all 0.4s ease;
         }
 
-        
         @keyframes float-light {
             0% { transform: translateY(0px); }
-            50% { transform: translateY(-12px) rotate(3deg); } /* Lên và xoay nhẹ */
+            50% { transform: translateY(-12px) rotate(3deg); }
             100% { transform: translateY(0px); }
         }
 
@@ -107,7 +179,7 @@
 
         .uni-name {
             font-size: 13px;
-            color: #556b82;
+            color: #8a9ba8;
             margin-bottom: 30px;
             font-weight: 500;
             line-height: 1.5;
@@ -118,40 +190,38 @@
             margin-bottom: 20px;
         }
 
-        input {
+        input[type="number"] {
             width: 100%;
-            height: 55px; 
-            background: #f4f8fd; 
-            border: 2px solid #e0e9f5; 
+            height: 55px;
+            background: var(--input-bg); 
+            border: 2px solid var(--input-border); 
             border-radius: 15px;
             font-size: 18px;
             font-weight: 700;
             color: var(--primary-color);
             text-align: center;
             box-sizing: border-box;
-            box-shadow: inset 4px 4px 8px rgba(0, 51, 102, 0.05), 
-                        inset -4px -4px 8px rgba(255, 255, 255, 1);
+            box-shadow: var(--inset-dark), var(--inset-light);
             transition: all 0.3s ease;
             outline: none;
             font-family: 'Roboto', sans-serif;
             margin: 0;
         }
 
-        input::placeholder {
-            color: #9ab0c5;
+        input[type="number"]::placeholder {
+            color: #8a9ba8;
             font-weight: 500;
         }
 
-        input:focus {
-            background: #ffffff;
+        input[type="number"]:focus {
+            background: var(--card-color);
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.2),
-                        inset 2px 2px 5px rgba(0, 51, 102, 0.03); 
+            box-shadow: 0 0 0 2px rgba(77, 166, 255, 0.2), var(--inset-dark); 
         }
 
-        button {
+        button#btnSubmit {
             width: 100%;
-            height: 55px; 
+            height: 55px;
             background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%);
             color: #ffffff;
             border: none;
@@ -162,7 +232,7 @@
             text-transform: uppercase;
             cursor: pointer;
             box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2), 
-                       -5px -5px 12px rgba(255, 255, 255, 1);
+                       -5px -5px 12px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
             font-family: 'Roboto', sans-serif;
             display: flex;
@@ -170,16 +240,20 @@
             justify-content: center;
         }
 
-        button:active {
+        button#btnSubmit:active {
             transform: translateY(2px);
-            box-shadow: inset 3px 3px 8px rgba(0, 51, 102, 0.2);
         }
 
-        button:disabled {
+        button#btnSubmit:disabled {
             background: #cbd4db;
             color: #8a9ba8;
             cursor: not-allowed;
             box-shadow: none;
+        }
+
+        body.dark-mode button#btnSubmit:disabled {
+            background: #2a3038;
+            color: #5a6673;
         }
 
         #status-container {
@@ -196,8 +270,8 @@
             display: none;
             width: 26px;
             height: 26px;
-            border: 3px solid #e0e9f5;
-            border-top: 3px solid #0073e6;
+            border: 3px solid var(--input-border);
+            border-top: 3px solid var(--accent-color);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -209,7 +283,7 @@
         .footer {
             margin-top: 35px;
             font-size: 11px;
-            color: #9ab0c5;
+            color: #8a9ba8;
             font-weight: 500;
             line-height: 1.6;
         }
@@ -218,6 +292,13 @@
 <body>
 
 <div class="neumorphic-card-light">
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onchange="toggleTheme(this)" />
+            <div class="slider round"></div>
+        </label>
+    </div>
+
     <div class="celebration-ribbon">⭐ 30/4 ⭐</div>
 
     <div class="logo-container">
@@ -248,10 +329,30 @@
 </div>
 
 <script>
-    // GIỮ NGUYÊN PHẦN SCRIPT CỦA BẠN VÌ NÓ CHẠY TỐT
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwB3JIlliq5Qsd53uEH6UdsxS-WjNE6yO4DQkTeeYYbNuNeSiNEul4XWzZoOVLIMua8/exec'; 
     const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
     const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
+
+    // Xử lý bật/tắt Dark Mode và lưu vào bộ nhớ web
+    const toggleSwitch = document.getElementById('checkbox');
+    const currentTheme = localStorage.getItem('utc2_theme');
+
+    if (currentTheme) {
+        document.body.classList.add(currentTheme);
+        if (currentTheme === 'dark-mode') {
+            toggleSwitch.checked = true;
+        }
+    }
+
+    function toggleTheme(e) {
+        if (e.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('utc2_theme', 'dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('utc2_theme', 'light-mode');
+        }    
+    }
 
     function getDeviceId() {
         let id = localStorage.getItem('utc2_device_id');
@@ -278,7 +379,7 @@
         try {
             btn.disabled = true;
             loader.style.display = "block";
-            status.style.color = "var(--primary-color)";
+            status.style.color = "var(--accent-color)";
             status.innerText = "🔍 Đang tìm Trạm BLE...";
 
             const device = await navigator.bluetooth.requestDevice({
