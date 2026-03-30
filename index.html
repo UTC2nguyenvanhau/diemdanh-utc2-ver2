@@ -48,20 +48,20 @@
             background-color: var(--bg-color);
             color: var(--primary-color);
             display: flex;
+            flex-direction: column; /* Để lịch sử nằm dưới card */
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             box-sizing: border-box;
             transition: background-color 0.4s ease, color 0.4s ease;
             position: relative;
         }
 
-        /* BANNER MẤT KẾT NỐI INTERNET */
         #offline-banner {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; right: 0;
             background-color: var(--error);
             color: white;
@@ -70,9 +70,7 @@
             font-size: 13px;
             font-weight: bold;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .neumorphic-card-light {
@@ -86,147 +84,114 @@
             box-sizing: border-box;
             position: relative;
             overflow: hidden;
-            transition: all 0.4s ease;
+            margin-bottom: 30px;
         }
 
-        /* Công tắc Dark Mode */
         .theme-switch-wrapper {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            align-items: center;
-            z-index: 10;
+            top: 20px; left: 20px;
+            display: flex; align-items: center; z-index: 10;
         }
 
-        .theme-switch {
-            display: inline-block;
-            height: 24px;
-            position: relative;
-            width: 46px;
-        }
-
+        .theme-switch { display: inline-block; height: 24px; position: relative; width: 46px; }
         .theme-switch input { display: none; }
 
         .slider {
-            background-color: #cbd4db;
-            bottom: 0; cursor: pointer; left: 0;
-            position: absolute; right: 0; top: 0;
-            transition: .4s; border-radius: 24px;
-            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
+            background-color: #cbd4db; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 24px;
         }
 
         .slider:before {
-            background-color: #fff; bottom: 3px; content: "";
-            height: 18px; left: 3px; position: absolute;
-            transition: .4s; width: 18px; border-radius: 50%;
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            background-color: #fff; bottom: 3px; content: ""; height: 18px; left: 3px; position: absolute; transition: .4s; width: 18px; border-radius: 50%;
         }
 
         input:checked + .slider { background-color: var(--accent-color); }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* Dải ruy băng mừng ngày 30/4 */
         .celebration-ribbon {
-            position: absolute;
-            top: 15px; right: -35px;
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: var(--golden);
-            padding: 7px 40px; font-size: 10px;
-            font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.5px; transform: rotate(45deg);
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-            z-index: 10;
+            position: absolute; top: 15px; right: -35px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: var(--golden); padding: 7px 40px; font-size: 10px; font-weight: 700; transform: rotate(45deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); z-index: 10;
         }
 
         .logo-container {
-            width: 130px; height: 130px;
-            margin: 0 auto 25px auto;
-            border-radius: 50%; background: var(--card-color);
-            box-shadow: var(--dark-shadow), var(--light-shadow);
-            display: flex; align-items: center; justify-content: center;
-            animation: float-light 6s ease-in-out infinite;
-            transition: all 0.4s ease;
+            width: 130px; height: 130px; margin: 0 auto 25px auto; border-radius: 50%; background: var(--card-color); box-shadow: var(--dark-shadow), var(--light-shadow); display: flex; align-items: center; justify-content: center; animation: float-light 6s ease-in-out infinite;
         }
 
-        @keyframes float-light {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-12px) rotate(3deg); }
-            100% { transform: translateY(0px); }
-        }
+        @keyframes float-light { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px) rotate(3deg); } 100% { transform: translateY(0px); } }
 
         .logo-school { width: 95px; height: auto; }
 
-        h2 {
-            font-size: 22px; font-weight: 900;
-            margin: 0 0 8px 0; color: var(--primary-color);
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        h2 { font-size: 22px; font-weight: 900; margin: 0 0 8px 0; color: var(--primary-color); text-transform: uppercase; }
 
-        .uni-name {
-            font-size: 13px; color: #8a9ba8; margin-bottom: 30px;
-            font-weight: 500; line-height: 1.5; text-transform: uppercase;
-        }
-
-        .input-group { margin-bottom: 20px; }
+        .uni-name { font-size: 13px; color: #8a9ba8; margin-bottom: 30px; font-weight: 500; line-height: 1.5; text-transform: uppercase; }
 
         input[type="number"] {
-            width: 100%; height: 55px;
-            background: var(--input-bg); border: 2px solid var(--input-border); 
-            border-radius: 15px; font-size: 18px; font-weight: 700;
-            color: var(--primary-color); text-align: center;
-            box-sizing: border-box; box-shadow: var(--inset-dark), var(--inset-light);
-            transition: all 0.3s ease; outline: none; margin: 0;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        input[type="number"]::placeholder { color: #8a9ba8; font-weight: 500; }
-
-        input[type="number"]:focus {
-            background: var(--card-color); border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(77, 166, 255, 0.2), var(--inset-dark); 
+            width: 100%; height: 55px; background: var(--input-bg); border: 2px solid var(--input-border); border-radius: 15px; font-size: 18px; font-weight: 700; color: var(--primary-color); text-align: center; box-sizing: border-box; box-shadow: var(--inset-dark), var(--inset-light); outline: none; font-family: 'Roboto', sans-serif;
         }
 
         button#btnSubmit {
-            width: 100%; height: 55px;
-            background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%);
-            color: #ffffff; border: none; border-radius: 15px;
-            font-size: 17px; font-weight: 700; letter-spacing: 1px;
-            text-transform: uppercase; cursor: pointer;
-            box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2), -5px -5px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease; display: flex;
-            align-items: center; justify-content: center;
-            font-family: 'Roboto', sans-serif;
+            width: 100%; height: 55px; background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%); color: #ffffff; border: none; border-radius: 15px; font-size: 17px; font-weight: 700; cursor: pointer; box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2); display: flex; align-items: center; justify-content: center; font-family: 'Roboto', sans-serif; margin-top: 20px;
         }
 
-        button#btnSubmit:active { transform: translateY(2px); }
+        button#btnSubmit:disabled { background: #cbd4db; color: #8a9ba8; cursor: not-allowed; box-shadow: none; }
 
-        button#btnSubmit:disabled {
-            background: #cbd4db; color: #8a9ba8;
-            cursor: not-allowed; box-shadow: none; transform: translateY(0);
-        }
+        #status-container { margin-top: 25px; min-height: 45px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
 
-        body.dark-mode button#btnSubmit:disabled {
-            background: #2a3038; color: #5a6673;
-        }
-
-        #status-container {
-            margin-top: 25px; min-height: 45px;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 10px;
-        }
-
-        .loader {
-            display: none; width: 26px; height: 26px;
-            border: 3px solid var(--input-border); border-top: 3px solid var(--accent-color);
-            border-radius: 50%; animation: spin 0.8s linear infinite;
-        }
+        .loader { display: none; width: 26px; height: 26px; border: 3px solid var(--input-border); border-top: 3px solid var(--accent-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* PHẦN LỊCH SỬ ĐIỂM DANH */
+        .history-section {
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 0 10px;
+        }
+
+        .history-header span {
+            font-size: 14px;
+            font-weight: 900;
+            color: #8a9ba8;
+            letter-spacing: 1px;
+        }
+
+        .clear-btn {
+            font-size: 12px;
+            color: var(--error);
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .history-card {
+            background: var(--card-color);
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: var(--dark-shadow), var(--light-shadow);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideUp 0.4s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .history-info { display: flex; flex-direction: column; }
+        .h-mssv { font-weight: 800; font-size: 15px; color: var(--primary-color); }
+        .h-time { font-size: 12px; color: #8a9ba8; margin-top: 2px; }
+        .h-status { color: var(--success); font-weight: 900; font-size: 12px; }
+
         .footer {
-            margin-top: 35px; font-size: 11px; color: #8a9ba8;
-            font-weight: 500; line-height: 1.6;
+            margin-top: 40px; font-size: 11px; color: #8a9ba8; font-weight: 500; line-height: 1.6; text-align: center;
         }
     </style>
 </head>
@@ -236,9 +201,9 @@
 
 <div class="neumorphic-card-light">
     <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
+        <label class="theme-switch">
             <input type="checkbox" id="checkbox" onchange="toggleTheme(this)" />
-            <div class="slider round"></div>
+            <div class="slider"></div>
         </label>
     </div>
 
@@ -263,12 +228,21 @@
         <div class="loader" id="spinner"></div>
         <div id="status" style="font-weight: 700; font-size: 15px;">Sẵn sàng kết nối</div>
     </div>
+</div>
 
-    <div class="footer">
-        Chào mừng 51 năm Ngày Giải phóng miền Nam (30/4/1975 - 30/4/2026)<br>
-        © 2026 Nghiên cứu khoa học<br>
-        Bảo mật: ESP32 BLE + Cloud Anti-Cheat
+<div class="history-section">
+    <div class="history-header">
+        <span>LỊCH SỬ ĐIỂM DANH</span>
+        <span class="clear-btn" onclick="clearHistory()">Xóa sạch</span>
     </div>
+    <div id="history-list">
+        </div>
+</div>
+
+<div class="footer">
+    Chào mừng 51 năm Ngày Giải phóng miền Nam (30/4/1975 - 30/4/2026)<br>
+    © 2026 Nghiên cứu khoa học<br>
+    Bảo mật: ESP32 BLE + Cloud Anti-Cheat
 </div>
 
 <script>
@@ -276,36 +250,23 @@
     const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
     const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
-    /* ==========================================
-       1. CHỨC NĂNG BẬT/TẮT DARK MODE
-       ========================================== */
+    // 1. Dark Mode & Theme Management
     const toggleSwitch = document.getElementById('checkbox');
-    const currentTheme = localStorage.getItem('utc2_theme');
-    if (currentTheme) {
-        document.body.classList.add(currentTheme);
-        if (currentTheme === 'dark-mode') toggleSwitch.checked = true;
+    if (localStorage.getItem('utc2_theme') === 'dark-mode') {
+        document.body.classList.add('dark-mode');
+        toggleSwitch.checked = true;
     }
     function toggleTheme(e) {
-        if (e.checked) {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('utc2_theme', 'dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('utc2_theme', 'light-mode');
-        }    
+        const theme = e.checked ? 'dark-mode' : 'light-mode';
+        document.body.classList.toggle('dark-mode', e.checked);
+        localStorage.setItem('utc2_theme', theme);
     }
 
-    /* ==========================================
-       2. CHỨC NĂNG TỰ ĐỘNG NHỚ MSSV (REMEMBER ME)
-       ========================================== */
-    const savedMssv = localStorage.getItem('utc2_saved_mssv');
-    if (savedMssv) {
-        document.getElementById('mssv').value = savedMssv;
-    }
+    // 2. Remember Me
+    const mssvInput = document.getElementById('mssv');
+    mssvInput.value = localStorage.getItem('utc2_saved_mssv') || '';
 
-    /* ==========================================
-       3. CHỨC NĂNG KIỂM TRA INTERNET TRỰC TIẾP
-       ========================================== */
+    // 3. Internet Connectivity
     window.addEventListener('offline', () => {
         document.getElementById('offline-banner').style.display = 'block';
         document.getElementById('btnSubmit').disabled = true;
@@ -315,145 +276,104 @@
         document.getElementById('btnSubmit').disabled = false;
     });
 
-    /* ==========================================
-       4. CHỨC NĂNG TẠO ÂM THANH (KHÔNG CẦN FILE MP3)
-       ========================================== */
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playSound(type) {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        if (type === 'success') {
-            // Âm thanh báo thành công: Tiếng bíp cao, thanh thúy
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(900, audioCtx.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.1);
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.3);
-        } else if (type === 'error') {
-            // Âm thanh báo lỗi: Tiếng rè trầm, dứt khoát
-            oscillator.type = 'sawtooth';
-            oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.4);
-        }
+    // 4. Quản lý Lịch sử (LocalStorage)
+    function renderHistory() {
+        const history = JSON.parse(localStorage.getItem('utc2_history') || '[]');
+        const container = document.getElementById('history-list');
+        container.innerHTML = history.length ? '' : '<p style="text-align:center; font-size:12px; color:#8a9ba8;">Chưa có dữ liệu lịch sử</p>';
+        
+        // Hiện 5 lần gần nhất, đảo ngược để cái mới nhất lên đầu
+        history.slice().reverse().forEach(item => {
+            container.innerHTML += `
+                <div class="history-card">
+                    <div class="history-info">
+                        <span class="h-mssv">MSSV: ${item.mssv}</span>
+                        <span class="h-time">${item.timestamp}</span>
+                    </div>
+                    <span class="h-status">THÀNH CÔNG</span>
+                </div>
+            `;
+        });
     }
 
-    /* ==========================================
-       5. CHỨC NĂNG KHÓA NÚT BẤM ĐẾM NGƯỢC (COOLDOWN)
-       ========================================== */
-    function lockButtonWithCooldown(btn, seconds) {
-        btn.disabled = true;
-        let timeLeft = seconds;
-        btn.innerHTML = `<span>⏳ VUI LÒNG ĐỢI ${timeLeft}S...</span>`;
+    function saveToHistory(mssv) {
+        const history = JSON.parse(localStorage.getItem('utc2_history') || '[]');
+        const now = new Date();
+        const timestamp = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')} - Ngày ${now.getDate()}/${now.getMonth() + 1}`;
         
+        history.push({ mssv, timestamp });
+        if (history.length > 5) history.shift(); // Giữ tối đa 5 bản ghi
+        localStorage.setItem('utc2_history', JSON.stringify(history));
+        renderHistory();
+    }
+
+    function clearHistory() {
+        if(confirm("Bạn có chắc muốn xóa sạch lịch sử trên máy này?")) {
+            localStorage.removeItem('utc2_history');
+            renderHistory();
+        }
+    }
+    renderHistory(); // Load lịch sử khi mở trang
+
+    // 5. Cooldown & BLE Logic
+    function lockButton(btn, seconds) {
+        btn.disabled = true;
+        let left = seconds;
         const timer = setInterval(() => {
-            timeLeft--;
-            if (timeLeft > 0) {
-                btn.innerHTML = `<span>⏳ VUI LÒNG ĐỢI ${timeLeft}S...</span>`;
-            } else {
-                clearInterval(timer);
-                btn.disabled = false;
-                btn.innerHTML = `<span>XÁC NHẬN CÓ MẶT</span>`;
-            }
+            btn.innerHTML = `<span>⏳ ĐỢI ${left}S...</span>`;
+            if (--left < 0) { clearInterval(timer); btn.disabled = false; btn.innerHTML = "<span>XÁC NHẬN CÓ MẶT</span>"; }
         }, 1000);
     }
 
-    // Hàm tạo ID định danh máy
-    function getDeviceId() {
-        let id = localStorage.getItem('utc2_device_id');
-        if (!id) {
-            id = 'UTC2-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-            localStorage.setItem('utc2_device_id', id);
-        }
-        return id;
-    }
-
-    // HÀM XỬ LÝ ĐIỂM DANH CHÍNH
     async function handleAttendance() {
-        const mssvInput = document.getElementById('mssv');
         const mssv = mssvInput.value.trim();
         const status = document.getElementById('status');
         const btn = document.getElementById('btnSubmit');
         const loader = document.getElementById('spinner');
 
-        // Kiểm tra Internet ngay khi bấm nút
-        if (!navigator.onLine) {
-            playSound('error');
-            status.style.color = "var(--error)";
-            status.innerText = "❌ Không có kết nối mạng!";
-            return;
-        }
-
-        if (!mssv) {
-            playSound('error');
-            status.style.color = "var(--error)";
-            status.innerText = "❌ Vui lòng nhập MSSV!";
-            return;
-        }
-
-        // Lưu MSSV vào bộ nhớ (Remember Me)
+        if (!mssv) { status.style.color = "var(--error)"; status.innerText = "❌ Vui lòng nhập MSSV!"; return; }
         localStorage.setItem('utc2_saved_mssv', mssv);
 
         try {
-            btn.disabled = true;
-            loader.style.display = "block";
+            btn.disabled = true; loader.style.display = "block";
             status.style.color = "var(--accent-color)";
-            status.innerText = "🔍 Đang tìm Trạm BLE...";
+            status.innerText = "🔍 Đang quét Trạm BLE...";
 
             const device = await navigator.bluetooth.requestDevice({
                 filters: [{ name: 'TRAM-DIEM-DANH' }],
                 optionalServices: [SERVICE_UUID]
             });
 
-            status.innerText = "🔗 Kiểm tra bảo mật...";
+            status.innerText = "🔗 Bắt tay bảo mật...";
             const server = await device.gatt.connect();
             const service = await server.getPrimaryService(SERVICE_UUID);
             const characteristic = await service.getCharacteristic(CHAR_UUID);
 
             const challenge = Math.floor(Math.random() * 9000) + 1000;
             await characteristic.writeValue(new TextEncoder().encode(challenge.toString()));
-            
-            await new Promise(r => setTimeout(r, 250)); 
-
+            await new Promise(r => setTimeout(r, 300)); 
             const value = await characteristic.readValue();
             const response = new TextDecoder().decode(value);
-            
             device.gatt.disconnect();
 
             status.innerText = "☁️ Đang đồng bộ Cloud...";
-            const finalUrl = `${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${getDeviceId()}`;
-            
-            const apiRes = await fetch(finalUrl);
-            const result = await apiRes.text();
+            const res = await fetch(`${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${localStorage.getItem('utc2_device_id') || 'UTC2-'+Math.random().toString(36).substr(2,9).toUpperCase()}`);
+            const result = await res.text();
             
             loader.style.display = "none";
-
             if (result.includes("Thành công")) {
-                playSound('success'); // Kêu Tít Tít
                 status.style.color = "var(--success)";
                 status.innerHTML = "✅ " + result;
-                lockButtonWithCooldown(btn, 5); // Khóa nút 5s để chống Spam
+                saveToHistory(mssv); // Lưu vào lịch sử máy
+                lockButton(btn, 5);
             } else {
-                playSound('error'); // Kêu Bíp lỗi
                 status.style.color = "var(--error)";
                 status.innerHTML = "⚠️ " + result;
-                lockButtonWithCooldown(btn, 3); // Khóa nút 3s
+                lockButton(btn, 3);
             }
-
         } catch (err) {
-            loader.style.display = "none";
-            playSound('error'); // Kêu bíp lỗi phần cứng
-            status.style.color = "var(--error)";
-            status.innerText = "❌ Lỗi: Kết nối thất bại hoặc bị hủy!";
-            lockButtonWithCooldown(btn, 3); 
+            loader.style.display = "none"; btn.disabled = false;
+            status.style.color = "var(--error)"; status.innerText = "❌ Lỗi: Kết nối bị hủy!";
             console.error(err);
         }
     }
