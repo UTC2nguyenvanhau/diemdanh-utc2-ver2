@@ -20,20 +20,21 @@
             
             --light-shadow: -8px -8px 16px rgba(255, 255, 255, 1);
             --dark-shadow: 8px 8px 16px rgba(0, 48, 110, 0.08);
-            --inset-light: inset -5px -5px 10px rgba(255, 255, 255, 1);
-            --inset-dark: inset 5px 5px 10px rgba(0, 48, 110, 0.05);
         }
 
         body {
-            /* Áp dụng font Nunito cho toàn bộ trang web */
             font-family: 'Nunito', sans-serif;
             background-color: var(--bg-color);
             color: var(--primary-color);
+            /* PHẦN QUAN TRỌNG: Căn giữa tuyệt đối */
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px; /* Tránh chạm mép màn hình điện thoại */
+            box-sizing: border-box;
         }
 
         .neumorphic-card-light {
@@ -41,17 +42,20 @@
             padding: 40px 30px;
             border-radius: 35px;
             box-shadow: var(--dark-shadow), var(--light-shadow);
-            width: 90%;
-            max-width: 400px;
+            width: 100%; /* Chiếm hết chiều rộng có thể */
+            max-width: 400px; /* Nhưng không quá 400px */
             text-align: center;
             box-sizing: border-box;
             border: 1px solid rgba(255, 255, 255, 0.5);
+            /* Đảm bảo căn giữa trong container cha */
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .logo-container {
-            width: 160px;
-            height: 160px;
-            margin: 0 auto 30px auto;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 25px auto;
             border-radius: 50%;
             background: var(--card-color);
             box-shadow: 6px 6px 12px rgba(0, 48, 110, 0.1), 
@@ -69,137 +73,105 @@
         }
 
         .logo-school {
-            width: 125px;
+            width: 100px;
             height: auto;
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
 
         h2 {
-            font-size: 24px;
-            font-weight: 900; /* Font chữ dày, bo tròn nhìn rất chắc chắn */
-            margin: 0 0 8px 0;
+            font-size: 22px;
+            font-weight: 900;
+            margin: 0 0 10px 0;
             color: var(--primary-color);
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
         }
 
         .uni-name {
-            font-size: 14px;
+            font-size: 13px;
             color: #7f8c8d;
-            margin-bottom: 40px;
+            margin-bottom: 35px;
             font-weight: 700;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .input-group {
-            margin-bottom: 30px;
-            position: relative;
+            margin-bottom: 25px;
         }
 
         input {
             width: 100%;
-            padding: 18px;
-            /* Đổi nền hơi xanh nhạt để tách biệt khỏi nền trắng của thẻ */
+            padding: 16px;
             background: #f4f8fd; 
-            /* Thêm đường viền rõ ràng nhưng vẫn dịu mắt */
             border: 2px solid #dce6f2; 
-            border-radius: 20px;
-            font-size: 20px;
+            border-radius: 18px;
+            font-size: 18px;
             font-weight: 800;
             color: var(--primary-color);
             text-align: center;
             box-sizing: border-box;
-            /* Giữ lại hiệu ứng lõm nhẹ 3D */
             box-shadow: inset 3px 3px 6px rgba(0, 48, 110, 0.05), 
                         inset -3px -3px 6px rgba(255, 255, 255, 1);
             transition: all 0.3s ease;
             outline: none;
-            font-family: 'Nunito', sans-serif;
         }
 
-        input::placeholder {
-            color: #9aa8b6; /* Làm màu chữ placeholder rõ nét hơn một chút */
-            font-weight: 700;
-            font-size: 16px;
-        }
-
-        /* Hiệu ứng khi bấm vào để gõ chữ */
         input:focus {
-            background: #ffffff; /* Nền sáng bừng lên trắng tinh */
-            border-color: var(--accent-color); /* Viền chuyển sang xanh dương */
-            /* Đổ bóng phát sáng ra ngoài (Glow effect) */
-            box-shadow: 0 0 0 4px rgba(112, 186, 255, 0.25),
+            background: #ffffff;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(112, 186, 255, 0.2),
                         inset 2px 2px 4px rgba(0, 48, 110, 0.03); 
         }
 
         button {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: linear-gradient(135deg, #70baff 0%, #a2d6ff 100%);
             color: var(--primary-color);
             border: none;
-            border-radius: 20px;
-            font-size: 17px;
+            border-radius: 18px;
+            font-size: 16px;
             font-weight: 900;
-            letter-spacing: 1.5px;
             text-transform: uppercase;
             cursor: pointer;
-            box-shadow: 5px 5px 10px rgba(0, 48, 110, 0.2), 
-                       -5px -5px 10px rgba(255, 255, 255, 1);
+            box-shadow: 4px 4px 8px rgba(0, 48, 110, 0.15), 
+                       -4px -4px 8px rgba(255, 255, 255, 1);
             transition: all 0.2s ease;
-            font-family: 'Nunito', sans-serif;
-        }
-
-        button:hover {
-            opacity: 0.9;
         }
 
         button:active {
-            background: linear-gradient(135deg, #a2d6ff 0%, #70baff 100%);
-            box-shadow: inset 5px 5px 10px rgba(0, 48, 110, 0.2), 
-                        inset -5px -5px 10px rgba(255, 255, 255, 1);
-            transform: translateY(2px) scale(0.99);
-        }
-
-        button:disabled {
-            background: #e0e0e0;
-            color: #b0bec5;
-            cursor: not-allowed;
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            transform: none;
+            transform: scale(0.98);
+            box-shadow: inset 4px 4px 8px rgba(0, 48, 110, 0.1);
         }
 
         #status-container {
-            margin-top: 30px;
-            min-height: 50px;
-            font-size: 16px;
-            font-weight: 800;
+            margin-top: 25px;
+            min-height: 45px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            justify-content: center;
+            gap: 10px;
         }
 
         .loader {
             display: none;
-            width: 28px;
-            height: 28px;
-            border: 4px solid var(--bg-color);
-            border-top: 4px solid var(--accent-color);
+            width: 24px;
+            height: 24px;
+            border: 3px solid #eee;
+            border-top: 3px solid var(--accent-color);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
         .footer {
-            margin-top: 40px;
-            font-size: 12px;
+            margin-top: 35px;
+            font-size: 11px;
             color: #b0bec5;
-            line-height: 1.6;
             font-weight: 700;
         }
     </style>
@@ -218,22 +190,21 @@
         <input type="number" id="mssv" placeholder="Nhập MSSV" autocomplete="off">
     </div>
 
-    <button onclick="handleAttendance()" id="btnSubmit">
-        <span>XÁC NHẬN CÓ MẶT</span>
-    </button>
+    <button onclick="handleAttendance()" id="btnSubmit">XÁC NHẬN CÓ MẶT</button>
 
     <div id="status-container">
         <div class="loader" id="spinner"></div>
-        <div id="status">Sẵn sàng kết nối trạm điểm danh</div>
+        <div id="status" style="font-weight: 800; font-size: 14px;">Sẵn sàng kết nối</div>
     </div>
 
     <div class="footer">
         © 2026 Nghiên cứu khoa học<br>
-        Bảo mật 2 lớp: ESP32 BLE + Cloud Anti-Cheat
+        Bảo mật: ESP32 BLE + Cloud Anti-Cheat
     </div>
 </div>
 
 <script>
+    // ... Giữ nguyên phần Script của bạn vì nó đã chạy tốt ...
     const scriptURL = 'https://script.google.com/macros/s/AKfycbwB3JIlliq5Qsd53uEH6UdsxS-WjNE6yO4DQkTeeYYbNuNeSiNEul4XWzZoOVLIMua8/exec'; 
     const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
     const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
@@ -270,28 +241,22 @@
                 optionalServices: [SERVICE_UUID]
             });
 
-            status.innerText = "🔗 Đang kiểm tra bảo mật...";
+            status.innerText = "🔗 Kiểm tra bảo mật...";
             const server = await device.gatt.connect();
             const service = await server.getPrimaryService(SERVICE_UUID);
             const characteristic = await service.getCharacteristic(CHAR_UUID);
 
             const challenge = Math.floor(Math.random() * 9000) + 1000;
-            const encoder = new TextEncoder();
-            await characteristic.writeValue(encoder.encode(challenge.toString()));
-            
+            await characteristic.writeValue(new TextEncoder().encode(challenge.toString()));
             await new Promise(r => setTimeout(r, 250)); 
-
             const value = await characteristic.readValue();
             const response = new TextDecoder().decode(value);
-            
             device.gatt.disconnect();
 
-            status.innerText = "☁️ Đang đồng bộ Cloud...";
-            const deviceId = getDeviceId();
-            const finalUrl = `${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
-            
-            const apiResponse = await fetch(finalUrl);
-            const result = await apiResponse.text();
+            status.innerText = "☁️ Đang đồng bộ...";
+            const finalUrl = `${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${getDeviceId()}`;
+            const apiRes = await fetch(finalUrl);
+            const result = await apiRes.text();
             
             loader.style.display = "none";
             btn.disabled = false;
@@ -304,13 +269,11 @@
                 status.style.color = "var(--error)";
                 status.innerHTML = "⚠️ " + result;
             }
-
         } catch (err) {
             loader.style.display = "none";
             btn.disabled = false;
             status.style.color = "var(--error)";
-            status.innerText = "❌ Lỗi: Kết nối bị hủy hoặc lỗi trạm!";
-            console.error(err);
+            status.innerText = "❌ Lỗi: Kết nối thất bại!";
         }
     }
 </script>
