@@ -32,13 +32,13 @@
         body.dark-mode {
             --bg-color: #1a1e24;
             --card-color: #1a1e24;
-            --primary-color: #e0e9f5; /* Chữ màu sáng */
+            --primary-color: #e0e9f5; 
             --accent-color: #66b3ff;
-            --input-bg: #14171c; /* Nền ô nhập liệu tối hơn nền xíu */
+            --input-bg: #14171c; 
             --input-border: #232830;
             
-            --light-shadow: -8px -8px 16px rgba(255, 255, 255, 0.03); /* Bóng sáng mờ đi */
-            --dark-shadow: 8px 8px 16px rgba(0, 0, 0, 0.4); /* Bóng tối đậm lên */
+            --light-shadow: -8px -8px 16px rgba(255, 255, 255, 0.03); 
+            --dark-shadow: 8px 8px 16px rgba(0, 0, 0, 0.4); 
             --inset-light: inset -4px -4px 8px rgba(255, 255, 255, 0.02);
             --inset-dark: inset 4px 4px 8px rgba(0, 0, 0, 0.5);
         }
@@ -55,6 +55,24 @@
             padding: 20px;
             box-sizing: border-box;
             transition: background-color 0.4s ease, color 0.4s ease;
+            position: relative;
+        }
+
+        /* BANNER MẤT KẾT NỐI INTERNET */
+        #offline-banner {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            background-color: var(--error);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .neumorphic-card-light {
@@ -88,71 +106,45 @@
             width: 46px;
         }
 
-        .theme-switch input {
-            display: none;
-        }
+        .theme-switch input { display: none; }
 
         .slider {
             background-color: #cbd4db;
-            bottom: 0;
-            cursor: pointer;
-            left: 0;
-            position: absolute;
-            right: 0;
-            top: 0;
-            transition: .4s;
-            border-radius: 24px;
+            bottom: 0; cursor: pointer; left: 0;
+            position: absolute; right: 0; top: 0;
+            transition: .4s; border-radius: 24px;
             box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
         }
 
         .slider:before {
-            background-color: #fff;
-            bottom: 3px;
-            content: "";
-            height: 18px;
-            left: 3px;
-            position: absolute;
-            transition: .4s;
-            width: 18px;
-            border-radius: 50%;
+            background-color: #fff; bottom: 3px; content: "";
+            height: 18px; left: 3px; position: absolute;
+            transition: .4s; width: 18px; border-radius: 50%;
             box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
         }
 
-        input:checked + .slider {
-            background-color: var(--accent-color);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(22px);
-        }
+        input:checked + .slider { background-color: var(--accent-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
 
         /* Dải ruy băng mừng ngày 30/4 */
         .celebration-ribbon {
             position: absolute;
-            top: 15px;
-            right: -35px;
+            top: 15px; right: -35px;
             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
             color: var(--golden);
-            padding: 7px 40px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transform: rotate(45deg);
+            padding: 7px 40px; font-size: 10px;
+            font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; transform: rotate(45deg);
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
             z-index: 10;
         }
 
         .logo-container {
-            width: 130px;
-            height: 130px;
+            width: 130px; height: 130px;
             margin: 0 auto 25px auto;
-            border-radius: 50%;
-            background: var(--card-color);
+            border-radius: 50%; background: var(--card-color);
             box-shadow: var(--dark-shadow), var(--light-shadow);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             animation: float-light 6s ease-in-out infinite;
             transition: all 0.4s ease;
         }
@@ -163,133 +155,84 @@
             100% { transform: translateY(0px); }
         }
 
-        .logo-school {
-            width: 95px;
-            height: auto;
-        }
+        .logo-school { width: 95px; height: auto; }
 
         h2 {
-            font-size: 22px;
-            font-weight: 900;
-            margin: 0 0 8px 0;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 22px; font-weight: 900;
+            margin: 0 0 8px 0; color: var(--primary-color);
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
 
         .uni-name {
-            font-size: 13px;
-            color: #8a9ba8;
-            margin-bottom: 30px;
-            font-weight: 500;
-            line-height: 1.5;
-            text-transform: uppercase;
+            font-size: 13px; color: #8a9ba8; margin-bottom: 30px;
+            font-weight: 500; line-height: 1.5; text-transform: uppercase;
         }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
+        .input-group { margin-bottom: 20px; }
 
         input[type="number"] {
-            width: 100%;
-            height: 55px;
-            background: var(--input-bg); 
-            border: 2px solid var(--input-border); 
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-align: center;
-            box-sizing: border-box;
-            box-shadow: var(--inset-dark), var(--inset-light);
-            transition: all 0.3s ease;
-            outline: none;
+            width: 100%; height: 55px;
+            background: var(--input-bg); border: 2px solid var(--input-border); 
+            border-radius: 15px; font-size: 18px; font-weight: 700;
+            color: var(--primary-color); text-align: center;
+            box-sizing: border-box; box-shadow: var(--inset-dark), var(--inset-light);
+            transition: all 0.3s ease; outline: none; margin: 0;
             font-family: 'Roboto', sans-serif;
-            margin: 0;
         }
 
-        input[type="number"]::placeholder {
-            color: #8a9ba8;
-            font-weight: 500;
-        }
+        input[type="number"]::placeholder { color: #8a9ba8; font-weight: 500; }
 
         input[type="number"]:focus {
-            background: var(--card-color);
-            border-color: var(--accent-color);
+            background: var(--card-color); border-color: var(--accent-color);
             box-shadow: 0 0 0 2px rgba(77, 166, 255, 0.2), var(--inset-dark); 
         }
 
         button#btnSubmit {
-            width: 100%;
-            height: 55px;
+            width: 100%; height: 55px;
             background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%);
-            color: #ffffff;
-            border: none;
-            border-radius: 15px;
-            font-size: 17px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2), 
-                       -5px -5px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
+            color: #ffffff; border: none; border-radius: 15px;
+            font-size: 17px; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; cursor: pointer;
+            box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2), -5px -5px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease; display: flex;
+            align-items: center; justify-content: center;
             font-family: 'Roboto', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        button#btnSubmit:active {
-            transform: translateY(2px);
-        }
+        button#btnSubmit:active { transform: translateY(2px); }
 
         button#btnSubmit:disabled {
-            background: #cbd4db;
-            color: #8a9ba8;
-            cursor: not-allowed;
-            box-shadow: none;
+            background: #cbd4db; color: #8a9ba8;
+            cursor: not-allowed; box-shadow: none; transform: translateY(0);
         }
 
         body.dark-mode button#btnSubmit:disabled {
-            background: #2a3038;
-            color: #5a6673;
+            background: #2a3038; color: #5a6673;
         }
 
         #status-container {
-            margin-top: 25px;
-            min-height: 45px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            margin-top: 25px; min-height: 45px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 10px;
         }
 
         .loader {
-            display: none;
-            width: 26px;
-            height: 26px;
-            border: 3px solid var(--input-border);
-            border-top: 3px solid var(--accent-color);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            display: none; width: 26px; height: 26px;
+            border: 3px solid var(--input-border); border-top: 3px solid var(--accent-color);
+            border-radius: 50%; animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .footer {
-            margin-top: 35px;
-            font-size: 11px;
-            color: #8a9ba8;
-            font-weight: 500;
-            line-height: 1.6;
+            margin-top: 35px; font-size: 11px; color: #8a9ba8;
+            font-weight: 500; line-height: 1.6;
         }
     </style>
 </head>
 <body>
+
+<div id="offline-banner">⚠️ Đã mất kết nối Internet! Hệ thống tạm khóa.</div>
 
 <div class="neumorphic-card-light">
     <div class="theme-switch-wrapper">
@@ -333,17 +276,15 @@
     const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
     const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
-    // Xử lý bật/tắt Dark Mode và lưu vào bộ nhớ web
+    /* ==========================================
+       1. CHỨC NĂNG BẬT/TẮT DARK MODE
+       ========================================== */
     const toggleSwitch = document.getElementById('checkbox');
     const currentTheme = localStorage.getItem('utc2_theme');
-
     if (currentTheme) {
         document.body.classList.add(currentTheme);
-        if (currentTheme === 'dark-mode') {
-            toggleSwitch.checked = true;
-        }
+        if (currentTheme === 'dark-mode') toggleSwitch.checked = true;
     }
-
     function toggleTheme(e) {
         if (e.checked) {
             document.body.classList.add('dark-mode');
@@ -354,6 +295,78 @@
         }    
     }
 
+    /* ==========================================
+       2. CHỨC NĂNG TỰ ĐỘNG NHỚ MSSV (REMEMBER ME)
+       ========================================== */
+    const savedMssv = localStorage.getItem('utc2_saved_mssv');
+    if (savedMssv) {
+        document.getElementById('mssv').value = savedMssv;
+    }
+
+    /* ==========================================
+       3. CHỨC NĂNG KIỂM TRA INTERNET TRỰC TIẾP
+       ========================================== */
+    window.addEventListener('offline', () => {
+        document.getElementById('offline-banner').style.display = 'block';
+        document.getElementById('btnSubmit').disabled = true;
+    });
+    window.addEventListener('online', () => {
+        document.getElementById('offline-banner').style.display = 'none';
+        document.getElementById('btnSubmit').disabled = false;
+    });
+
+    /* ==========================================
+       4. CHỨC NĂNG TẠO ÂM THANH (KHÔNG CẦN FILE MP3)
+       ========================================== */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        if (type === 'success') {
+            // Âm thanh báo thành công: Tiếng bíp cao, thanh thúy
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(900, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.1);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.3);
+        } else if (type === 'error') {
+            // Âm thanh báo lỗi: Tiếng rè trầm, dứt khoát
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(300, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.4);
+        }
+    }
+
+    /* ==========================================
+       5. CHỨC NĂNG KHÓA NÚT BẤM ĐẾM NGƯỢC (COOLDOWN)
+       ========================================== */
+    function lockButtonWithCooldown(btn, seconds) {
+        btn.disabled = true;
+        let timeLeft = seconds;
+        btn.innerHTML = `<span>⏳ VUI LÒNG ĐỢI ${timeLeft}S...</span>`;
+        
+        const timer = setInterval(() => {
+            timeLeft--;
+            if (timeLeft > 0) {
+                btn.innerHTML = `<span>⏳ VUI LÒNG ĐỢI ${timeLeft}S...</span>`;
+            } else {
+                clearInterval(timer);
+                btn.disabled = false;
+                btn.innerHTML = `<span>XÁC NHẬN CÓ MẶT</span>`;
+            }
+        }, 1000);
+    }
+
+    // Hàm tạo ID định danh máy
     function getDeviceId() {
         let id = localStorage.getItem('utc2_device_id');
         if (!id) {
@@ -363,6 +376,7 @@
         return id;
     }
 
+    // HÀM XỬ LÝ ĐIỂM DANH CHÍNH
     async function handleAttendance() {
         const mssvInput = document.getElementById('mssv');
         const mssv = mssvInput.value.trim();
@@ -370,11 +384,23 @@
         const btn = document.getElementById('btnSubmit');
         const loader = document.getElementById('spinner');
 
+        // Kiểm tra Internet ngay khi bấm nút
+        if (!navigator.onLine) {
+            playSound('error');
+            status.style.color = "var(--error)";
+            status.innerText = "❌ Không có kết nối mạng!";
+            return;
+        }
+
         if (!mssv) {
+            playSound('error');
             status.style.color = "var(--error)";
             status.innerText = "❌ Vui lòng nhập MSSV!";
             return;
         }
+
+        // Lưu MSSV vào bộ nhớ (Remember Me)
+        localStorage.setItem('utc2_saved_mssv', mssv);
 
         try {
             btn.disabled = true;
@@ -409,22 +435,25 @@
             const result = await apiRes.text();
             
             loader.style.display = "none";
-            btn.disabled = false;
 
             if (result.includes("Thành công")) {
+                playSound('success'); // Kêu Tít Tít
                 status.style.color = "var(--success)";
                 status.innerHTML = "✅ " + result;
-                mssvInput.value = ""; 
+                lockButtonWithCooldown(btn, 5); // Khóa nút 5s để chống Spam
             } else {
+                playSound('error'); // Kêu Bíp lỗi
                 status.style.color = "var(--error)";
                 status.innerHTML = "⚠️ " + result;
+                lockButtonWithCooldown(btn, 3); // Khóa nút 3s
             }
 
         } catch (err) {
             loader.style.display = "none";
-            btn.disabled = false;
+            playSound('error'); // Kêu bíp lỗi phần cứng
             status.style.color = "var(--error)";
-            status.innerText = "❌ Lỗi: Kết nối thất bại!";
+            status.innerText = "❌ Lỗi: Kết nối thất bại hoặc bị hủy!";
+            lockButtonWithCooldown(btn, 3); 
             console.error(err);
         }
     }
