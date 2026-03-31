@@ -48,7 +48,7 @@
             background-color: var(--bg-color);
             color: var(--primary-color);
             display: flex;
-            flex-direction: column; /* Để lịch sử nằm dưới card */
+            flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             min-height: 100vh;
@@ -85,6 +85,7 @@
             position: relative;
             overflow: hidden;
             margin-bottom: 30px;
+            transition: all 0.4s ease;
         }
 
         .theme-switch-wrapper {
@@ -112,7 +113,7 @@
         }
 
         .logo-container {
-            width: 130px; height: 130px; margin: 0 auto 25px auto; border-radius: 50%; background: var(--card-color); box-shadow: var(--dark-shadow), var(--light-shadow); display: flex; align-items: center; justify-content: center; animation: float-light 6s ease-in-out infinite;
+            width: 130px; height: 130px; margin: 0 auto 25px auto; border-radius: 50%; background: var(--card-color); box-shadow: var(--dark-shadow), var(--light-shadow); display: flex; align-items: center; justify-content: center; animation: float-light 6s ease-in-out infinite; transition: all 0.4s ease;
         }
 
         @keyframes float-light { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px) rotate(3deg); } 100% { transform: translateY(0px); } }
@@ -124,11 +125,11 @@
         .uni-name { font-size: 13px; color: #8a9ba8; margin-bottom: 30px; font-weight: 500; line-height: 1.5; text-transform: uppercase; }
 
         input[type="number"] {
-            width: 100%; height: 55px; background: var(--input-bg); border: 2px solid var(--input-border); border-radius: 15px; font-size: 18px; font-weight: 700; color: var(--primary-color); text-align: center; box-sizing: border-box; box-shadow: var(--inset-dark), var(--inset-light); outline: none; font-family: 'Roboto', sans-serif;
+            width: 100%; height: 55px; background: var(--input-bg); border: 2px solid var(--input-border); border-radius: 15px; font-size: 18px; font-weight: 700; color: var(--primary-color); text-align: center; box-sizing: border-box; box-shadow: var(--inset-dark), var(--inset-light); outline: none; transition: all 0.4s ease;
         }
 
         button#btnSubmit {
-            width: 100%; height: 55px; background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%); color: #ffffff; border: none; border-radius: 15px; font-size: 17px; font-weight: 700; cursor: pointer; box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2); display: flex; align-items: center; justify-content: center; font-family: 'Roboto', sans-serif; margin-top: 20px;
+            width: 100%; height: 55px; background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%); color: #ffffff; border: none; border-radius: 15px; font-size: 17px; font-weight: 700; cursor: pointer; box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2); display: flex; align-items: center; justify-content: center; margin-top: 20px; transition: all 0.3s ease;
         }
 
         button#btnSubmit:disabled { background: #cbd4db; color: #8a9ba8; cursor: not-allowed; box-shadow: none; }
@@ -140,59 +141,25 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* PHẦN LỊCH SỬ ĐIỂM DANH */
-        .history-section {
-            width: 100%;
-            max-width: 400px;
-            text-align: left;
-        }
-
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 0 10px;
-        }
-
-        .history-header span {
-            font-size: 14px;
-            font-weight: 900;
-            color: #8a9ba8;
-            letter-spacing: 1px;
-        }
-
-        .clear-btn {
-            font-size: 12px;
-            color: var(--error);
-            cursor: pointer;
-            font-weight: 700;
-        }
-
+        .history-section { width: 100%; max-width: 400px; text-align: left; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; }
+        .history-header span { font-size: 14px; font-weight: 900; color: #8a9ba8; letter-spacing: 1px; }
+        .clear-btn { font-size: 12px; color: var(--error); cursor: pointer; font-weight: 700; }
+        
         .history-card {
-            background: var(--card-color);
-            padding: 15px;
-            border-radius: 20px;
-            box-shadow: var(--dark-shadow), var(--light-shadow);
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: slideUp 0.4s ease-out forwards;
+            background: var(--card-color); padding: 15px; border-radius: 20px; box-shadow: var(--dark-shadow), var(--light-shadow); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; animation: slideUp 0.4s ease-out forwards; transition: all 0.4s ease;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .history-info { display: flex; flex-direction: column; }
         .h-mssv { font-weight: 800; font-size: 15px; color: var(--primary-color); }
         .h-time { font-size: 12px; color: #8a9ba8; margin-top: 2px; }
-        .h-status { color: var(--success); font-weight: 900; font-size: 12px; }
+        .h-status { font-weight: 900; font-size: 12px; }
+        .h-success { color: var(--success); }
+        .h-error { color: var(--error); }
 
-        .footer {
-            margin-top: 40px; font-size: 11px; color: #8a9ba8; font-weight: 500; line-height: 1.6; text-align: center;
-        }
+        .footer { margin-top: 40px; font-size: 11px; color: #8a9ba8; font-weight: 500; line-height: 1.6; text-align: center; }
     </style>
 </head>
 <body>
@@ -246,15 +213,65 @@
 </div>
 
 <script>
-    const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
-        .then(FingerprintJS => FingerprintJS.load());
-</script>
+    // 1. TẢI THƯ VIỆN FINGERPRINT TRƯỚC
+    const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load());
 
-<script>
-    // DÁN LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY
+    // 2. KHAI BÁO CẤU HÌNH
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzCByqoQ70J0732L9TkhIN0LeGxQcg2RMiLj3cIQ-D74qhI6BappOCU8tSenX-O7RfE/exec'; 
     const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
     const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
+
+    // ================= CÁC HÀM XỬ LÝ GIAO DIỆN =================
+    
+    // Hàm bật/tắt Dark Mode
+    function toggleTheme(element) {
+        if (element.checked) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // Hàm thêm lịch sử vào danh sách
+    function addHistory(mssv, isSuccess, message) {
+        const historyList = document.getElementById('history-list');
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('vi-VN'); // Lấy giờ Việt Nam
+        
+        const card = document.createElement('div');
+        card.className = 'history-card';
+        
+        const statusClass = isSuccess ? 'h-success' : 'h-error';
+        const statusText = isSuccess ? 'Thành công' : 'Thất bại';
+
+        card.innerHTML = `
+            <div class="history-info">
+                <span class="h-mssv">${mssv}</span>
+                <span class="h-time">${timeStr}</span>
+            </div>
+            <span class="h-status ${statusClass}">${statusText}</span>
+        `;
+        // Chèn lên đầu danh sách
+        historyList.prepend(card);
+    }
+
+    // Hàm xóa toàn bộ lịch sử
+    function clearHistory() {
+        document.getElementById('history-list').innerHTML = '';
+    }
+
+    // Lắng nghe sự kiện Mất mạng / Có mạng
+    window.addEventListener('offline', function() {
+        document.getElementById('offline-banner').style.display = 'block';
+        document.getElementById('btnSubmit').disabled = true;
+    });
+
+    window.addEventListener('online', function() {
+        document.getElementById('offline-banner').style.display = 'none';
+        document.getElementById('btnSubmit').disabled = false;
+    });
+
+    // ================= HÀM XỬ LÝ ĐIỂM DANH CHÍNH =================
 
     async function handleAttendance() {
         const mssv = document.getElementById('mssv').value.trim();
@@ -277,7 +294,7 @@
             status.innerText = "🔒 Đang quét bảo mật thiết bị...";
             const fp = await fpPromise;
             const fpResult = await fp.get();
-            const deviceId = fpResult.visitorId; // Đây là mã băm phần cứng (Hash), không thể giả mạo!
+            const deviceId = fpResult.visitorId;
 
             // --- LỚP GIÁP 2: QUÉT BLUETOOTH ESP32 ---
             status.innerText = "🔍 Đang tìm Trạm BLE...";
@@ -315,10 +332,12 @@
             if (result.includes("Thành công")) {
                 status.style.color = "var(--success)";
                 status.innerHTML = "🎉 " + result;
+                addHistory(mssv, true, result); // Lưu lịch sử thành công
                 document.getElementById('mssv').value = ""; 
             } else {
                 status.style.color = "var(--error)";
                 status.innerHTML = "⚠️ " + result;
+                addHistory(mssv, false, result); // Lưu lịch sử thất bại
             }
 
         } catch (err) {
@@ -330,13 +349,13 @@
         }
     }
 
-    // --- LỚP GIÁP 3: CHỐNG SOI CODE BẰNG F12 VÀ CHUỘT PHẢI ---
+    // --- LỚP GIÁP 3: CHỐNG SOI CODE ---
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) {
-        if (e.keyCode == 123) return false; // F12
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; // Ctrl+Shift+I
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; // Ctrl+Shift+J
-        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U
+        if (e.keyCode == 123) return false; 
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; 
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; 
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
     }
 </script>
 
