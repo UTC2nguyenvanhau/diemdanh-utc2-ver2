@@ -1,261 +1,371 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hệ Thống Điểm Danh UTC2</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Điểm Danh UTC2</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CHẾ ĐỘ SÁNG (MẶC ĐỊNH) */
+        :root {
+            --bg-color: #eaf1f9;
+            --card-color: #ffffff;
+            --primary-color: #003366;
+            --accent-color: #4da6ff;
+            --success: #27ae60;
+            --error: #e74c3c;
+            --golden: #f1c40f;
+            --input-bg: #f4f8fd;
+            --input-border: #e0e9f5;
+            
+            --light-shadow: -8px -8px 16px rgba(255, 255, 255, 0.8);
+            --dark-shadow: 8px 8px 16px rgba(0, 51, 102, 0.1);
+            --inset-light: inset -4px -4px 8px rgba(255, 255, 255, 1);
+            --inset-dark: inset 4px 4px 8px rgba(0, 51, 102, 0.05);
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+        /* CHẾ ĐỘ TỐI (DARK MODE) */
+        body.dark-mode {
+            --bg-color: #1a1e24;
+            --card-color: #1a1e24;
+            --primary-color: #e0e9f5; 
+            --accent-color: #66b3ff;
+            --input-bg: #14171c; 
+            --input-border: #232830;
+            
+            --light-shadow: -8px -8px 16px rgba(255, 255, 255, 0.03); 
+            --dark-shadow: 8px 8px 16px rgba(0, 0, 0, 0.4); 
+            --inset-light: inset -4px -4px 8px rgba(255, 255, 255, 0.02);
+            --inset-dark: inset 4px 4px 8px rgba(0, 0, 0, 0.5);
+        }
 
-<style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            box-sizing: border-box;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            position: relative;
+        }
 
-/* ===== ROOT ===== */
-:root {
-    --primary-color: #003366;
-    --accent-color: #4da6ff;
-    --success: #27ae60;
-    --error: #e74c3c;
-}
+        /* BLOCKER CHO PC/LAPTOP */
+        #desktop-blocker {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background-color: var(--bg-color); z-index: 9999; flex-direction: column; 
+            align-items: center; justify-content: center; text-align: center; padding: 20px;
+        }
 
-/* ===== BACKGROUND 30/4 ===== */
-body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #eaf1f9 0%, #fff0f0 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 30px 15px;
-    position: relative;
-    overflow-x: hidden;
-}
+        #offline-banner {
+            display: none; position: fixed; top: 0; left: 0; right: 0;
+            background-color: var(--error); color: white; text-align: center;
+            padding: 8px; font-size: 13px; font-weight: bold; z-index: 1000; text-transform: uppercase;
+        }
 
-/* ánh sáng nền */
-body::before {
-    content: "";
-    position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255,0,0,0.2), transparent);
-    top: -100px;
-    left: -100px;
-}
+        .neumorphic-card-light {
+            background: var(--card-color); padding: 55px 30px 40px 30px; border-radius: 30px;
+            box-shadow: var(--dark-shadow), var(--light-shadow); width: 100%; max-width: 400px;
+            text-align: center; box-sizing: border-box; position: relative; overflow: hidden;
+            margin-bottom: 30px; transition: all 0.4s ease;
+        }
 
-body::after {
-    content: "";
-    position: absolute;
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(255,215,0,0.25), transparent);
-    bottom: -100px;
-    right: -100px;
-}
+        .theme-switch-wrapper { position: absolute; top: 20px; left: 20px; display: flex; align-items: center; z-index: 10; }
+        .theme-switch { display: inline-block; height: 24px; position: relative; width: 46px; }
+        .theme-switch input { display: none; }
+        .slider { background-color: #cbd4db; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 24px; }
+        .slider:before { background-color: #fff; bottom: 3px; content: ""; height: 18px; left: 3px; position: absolute; transition: .4s; width: 18px; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
 
-/* pháo hoa nhẹ */
-.fireworks {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    background-image: radial-gradient(circle, rgba(255,0,0,0.3) 2px, transparent 2px),
-                      radial-gradient(circle, rgba(255,215,0,0.3) 2px, transparent 2px);
-    background-size: 60px 60px;
-    animation: sparkle 6s linear infinite;
-}
+        .celebration-ribbon {
+            position: absolute; top: 15px; right: -35px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); 
+            color: var(--golden); padding: 7px 40px; font-size: 10px; font-weight: 700; transform: rotate(45deg); 
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2); z-index: 10;
+        }
 
-@keyframes sparkle {
-    from { background-position: 0 0, 30px 30px; }
-    to { background-position: 60px 60px, 90px 90px; }
-}
+        .logo-container {
+            width: 130px; height: 130px; margin: 0 auto 25px auto; border-radius: 50%; background: var(--card-color); 
+            box-shadow: var(--dark-shadow), var(--light-shadow); display: flex; align-items: center; 
+            justify-content: center; animation: float-light 6s ease-in-out infinite; transition: all 0.4s ease;
+        }
 
-/* CARD */
-.neumorphic-card-light {
-    backdrop-filter: blur(10px);
-    background: rgba(255,255,255,0.75);
-    border-radius: 25px;
-    padding: 40px 25px;
-    width: 100%;
-    max-width: 400px;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-    position: relative;
-    z-index: 2;
-}
+        @keyframes float-light { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px) rotate(3deg); } 100% { transform: translateY(0px); } }
 
-/* ribbon */
-.celebration-ribbon {
-    position: absolute;
-    top: 10px;
-    right: -35px;
-    background: linear-gradient(135deg, red, darkred);
-    color: gold;
-    padding: 8px 40px;
-    transform: rotate(45deg);
-    font-weight: bold;
-}
+        .logo-school { width: 95px; height: auto; }
+        h2 { font-size: 22px; font-weight: 900; margin: 0 0 8px 0; color: var(--primary-color); text-transform: uppercase; }
+        .uni-name { font-size: 13px; color: #8a9ba8; margin-bottom: 30px; font-weight: 500; line-height: 1.5; text-transform: uppercase; }
 
-/* logo */
-.logo-container {
-    width: 120px;
-    height: 120px;
-    margin: auto;
-    border-radius: 50%;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: float 4s infinite;
-}
+        input[type="number"] {
+            width: 100%; height: 55px; background: var(--input-bg); border: 2px solid var(--input-border); 
+            border-radius: 15px; font-size: 18px; font-weight: 700; color: var(--primary-color); 
+            text-align: center; box-sizing: border-box; box-shadow: var(--inset-dark), var(--inset-light); 
+            outline: none; transition: all 0.4s ease;
+        }
 
-@keyframes float {
-    50% { transform: translateY(-10px); }
-}
+        button#btnSubmit {
+            width: 100%; height: 55px; background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%); 
+            color: #ffffff; border: none; border-radius: 15px; font-size: 17px; font-weight: 700; 
+            cursor: pointer; box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2); display: flex; 
+            align-items: center; justify-content: center; margin-top: 20px; transition: all 0.3s ease;
+        }
 
-/* input */
-input {
-    width: 100%;
-    height: 50px;
-    margin-top: 20px;
-    border-radius: 12px;
-    border: none;
-    text-align: center;
-    font-size: 18px;
-}
+        button#btnSubmit:disabled { background: #cbd4db; color: #8a9ba8; cursor: not-allowed; box-shadow: none; }
 
-/* button */
-button {
-    width: 100%;
-    height: 50px;
-    margin-top: 20px;
-    border-radius: 12px;
-    border: none;
-    background: linear-gradient(135deg, red, orange);
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
+        #status-container { margin-top: 25px; min-height: 45px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+        .loader { display: none; width: 26px; height: 26px; border: 3px solid var(--input-border); border-top: 3px solid var(--accent-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-/* status */
-#status {
-    margin-top: 15px;
-    font-weight: bold;
-}
+        /* LỊCH SỬ ĐIỂM DANH */
+        .history-section { width: 100%; max-width: 400px; text-align: left; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; }
+        .history-header span { font-size: 14px; font-weight: 900; color: #8a9ba8; letter-spacing: 1px; }
+        .clear-btn { font-size: 12px; color: var(--error); cursor: pointer; font-weight: 700; }
+        
+        .history-card {
+            background: var(--card-color); padding: 15px; border-radius: 20px; box-shadow: var(--dark-shadow), var(--light-shadow); 
+            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; 
+            animation: slideUp 0.4s ease-out forwards; transition: all 0.4s ease;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* history */
-.history-card {
-    background: rgba(255,255,255,0.7);
-    padding: 10px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-}
+        .history-info { display: flex; flex-direction: column; }
+        .h-mssv { font-weight: 800; font-size: 15px; color: var(--primary-color); }
+        .h-time { font-size: 12px; color: #8a9ba8; margin-top: 2px; }
+        .h-status { font-weight: 900; font-size: 12px; }
+        .h-success { color: var(--success); }
+        .h-error { color: var(--error); }
 
-/* footer */
-.footer {
-    margin-top: 20px;
-    font-size: 12px;
-    color: #777;
-    text-align: center;
-}
-
-</style>
+        .footer { margin-top: 40px; font-size: 11px; color: #8a9ba8; font-weight: 500; line-height: 1.6; text-align: center; }
+    </style>
 </head>
-
 <body>
 
-<div class="fireworks"></div>
-
-<div style="
-background: linear-gradient(135deg,red,darkred);
-color:gold;
-padding:10px 20px;
-border-radius:20px;
-margin-bottom:20px;
-font-weight:bold;
-">
-🇻🇳 Chào mừng 30/4 🇻🇳
+<div id="desktop-blocker">
+    <h1 style="color: var(--error); font-size: 60px; margin-bottom: 10px;">🚫</h1>
+    <h2 style="color: var(--primary-color);">TỪ CHỐI THIẾT BỊ</h2>
+    <p style="color: #8a9ba8; font-weight: 500; font-size: 16px;">Vui lòng sử dụng <b>Điện thoại thông minh (Smartphone)</b> để quét mã.<br>PC & Laptop không được hỗ trợ để đảm bảo tính minh bạch.</p>
 </div>
 
-<div class="neumorphic-card-light">
+<div id="offline-banner">⚠️ Đã mất kết nối Internet! Hệ thống tạm khóa.</div>
 
-<div class="celebration-ribbon">30/4</div>
+<div class="neumorphic-card-light" id="main-app">
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch">
+            <input type="checkbox" id="checkbox" onchange="toggleTheme(this)" />
+            <div class="slider"></div>
+        </label>
+    </div>
 
-<div class="logo-container">
-<img src="https://cdn.haitrieu.com/wp-content/uploads/2022/03/Logo-Dai-Hoc-Giao-Thong-Van-Tai-UTC.png" width="90">
+    <div class="celebration-ribbon">⭐ 30/4 ⭐</div>
+
+    <div class="logo-container">
+        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/03/Logo-Dai-Hoc-Giao-Thong-Van-Tai-UTC.png" class="logo-school" alt="UTC Logo">
+    </div>
+    
+    <h2>ĐIỂM DANH SINH VIÊN</h2>
+    <div class="uni-name">Trường Đại học Giao thông Vận tải<br>Phân hiệu tại TP.HCM</div>
+
+    <div class="input-group">
+        <input type="number" id="mssv" placeholder="Nhập mã số sinh viên" autocomplete="off">
+    </div>
+
+    <button onclick="handleAttendance()" id="btnSubmit">
+        <span>XÁC NHẬN CÓ MẶT</span>
+    </button>
+
+    <div id="status-container">
+        <div class="loader" id="spinner"></div>
+        <div id="status" style="font-weight: 700; font-size: 15px;">Sẵn sàng kết nối</div>
+    </div>
 </div>
 
-<h2>ĐIỂM DANH</h2>
-
-<input type="number" id="mssv" placeholder="Nhập MSSV">
-
-<button onclick="handleAttendance()" id="btnSubmit">XÁC NHẬN</button>
-
-<div id="status">Sẵn sàng</div>
-
+<div class="history-section" id="history-section">
+    <div class="history-header">
+        <span>LỊCH SỬ ĐIỂM DANH</span>
+        <span class="clear-btn" onclick="clearHistory()">Xóa</span>
+    </div>
+    <div id="history-list"></div>
 </div>
 
-<div id="history-list"></div>
-
-<div class="footer">
-Chào mừng 30/4/1975 - 30/4/2026
+<div class="footer" id="main-footer">
+    Chào mừng 51 năm Ngày Giải phóng miền Nam (30/4/1975 - 30/4/2026)<br>
+    © 2026 Nghiên cứu khoa học<br>
+    Bảo mật: ESP32 BLE + Cloud Anti-Cheat
 </div>
 
 <script>
-const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load());
+    const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load());
+</script>
 
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzCByqoQ70J0732L9TkhIN0LeGxQcg2RMiLj3cIQ-D74qhI6BappOCU8tSenX-O7RfE/exec'; 
-const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
-const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
+<script>
+    // 1. KIỂM TRA THIẾT BỊ (CHẶN PC/LAPTOP)
+    function checkDeviceType() {
+        const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const hasTouchScreen = (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+        
+        if (!isMobileUA || !hasTouchScreen) {
+            document.getElementById('desktop-blocker').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; 
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('history-section').style.display = 'none';
+            document.getElementById('main-footer').style.display = 'none';
+        }
+    }
+    checkDeviceType(); // Chạy ngay khi load
 
-async function handleAttendance() {
-    const mssv = document.getElementById('mssv').value.trim();
-    const status = document.getElementById('status');
+    // 2. CẤU HÌNH API
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzCByqoQ70J0732L9TkhIN0LeGxQcg2RMiLj3cIQ-D74qhI6BappOCU8tSenX-O7RfE/exec'; 
+    const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
+    const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
-    if (!mssv) {
-        status.innerText = "❌ Nhập MSSV";
-        return;
+    // 3. XỬ LÝ GIAO DIỆN & LOCAL STORAGE
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('utc2_theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('checkbox').checked = true;
+        }
+    });
+
+    function toggleTheme(element) {
+        if (element.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('utc2_theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('utc2_theme', 'light');
+        }
     }
 
-    try {
-        status.innerText = "🔒 Quét thiết bị...";
-        const fp = await fpPromise;
-        const fpResult = await fp.get();
-        const deviceId = fpResult.visitorId;
+    // 4. LỊCH SỬ ĐIỂM DANH
+    function addHistory(mssv, isSuccess, message) {
+        const historyList = document.getElementById('history-list');
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('vi-VN');
+        
+        const card = document.createElement('div');
+        card.className = 'history-card';
+        const statusClass = isSuccess ? 'h-success' : 'h-error';
+        const statusText = isSuccess ? 'Thành công' : 'Thất bại';
 
-        status.innerText = "🔍 Tìm BLE...";
-        const device = await navigator.bluetooth.requestDevice({
-            filters: [{ name: 'TRAM-DIEM-DANH' }],
-            optionalServices: [SERVICE_UUID]
-        });
-
-        const server = await device.gatt.connect();
-        const service = await server.getPrimaryService(SERVICE_UUID);
-        const characteristic = await service.getCharacteristic(CHAR_UUID);
-
-        const challenge = Math.floor(Math.random() * 9000) + 1000;
-        await characteristic.writeValue(new TextEncoder().encode(challenge.toString()));
-
-        await new Promise(r => setTimeout(r, 200));
-
-        const value = await characteristic.readValue();
-        const response = new TextDecoder().decode(value);
-        device.gatt.disconnect();
-
-        status.innerText = "☁️ Gửi dữ liệu...";
-        const res = await fetch(`${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`);
-        const result = await res.text();
-
-        status.innerText = result;
-
-        const div = document.createElement("div");
-        div.className = "history-card";
-        div.innerText = mssv + " - " + result;
-        document.getElementById("history-list").prepend(div);
-
-    } catch (err) {
-        status.innerText = "❌ Lỗi kết nối";
+        card.innerHTML = `
+            <div class="history-info">
+                <span class="h-mssv">${mssv}</span>
+                <span class="h-time">${timeStr}</span>
+            </div>
+            <span class="h-status ${statusClass}">${statusText}</span>
+        `;
+        historyList.prepend(card);
     }
-}
+
+    function clearHistory() {
+        document.getElementById('history-list').innerHTML = '';
+    }
+
+    // 5. CẢNH BÁO MẤT MẠNG
+    window.addEventListener('offline', () => {
+        document.getElementById('offline-banner').style.display = 'block';
+        document.getElementById('btnSubmit').disabled = true;
+    });
+    window.addEventListener('online', () => {
+        document.getElementById('offline-banner').style.display = 'none';
+        document.getElementById('btnSubmit').disabled = false;
+    });
+
+    // 6. XỬ LÝ ĐIỂM DANH (LÕI)
+    async function handleAttendance() {
+        const mssv = document.getElementById('mssv').value.trim();
+        const status = document.getElementById('status');
+        const btn = document.getElementById('btnSubmit');
+        const loader = document.getElementById('spinner');
+
+        if (!mssv) {
+            status.style.color = "var(--error)";
+            status.innerText = "❌ Vui lòng nhập MSSV!";
+            return;
+        }
+
+        try {
+            btn.disabled = true;
+            loader.style.display = "block";
+            
+            // Lớp giáp FingerprintJS
+            status.style.color = "var(--primary)";
+            status.innerText = "🔒 Đang quét vân tay thiết bị...";
+            const fp = await fpPromise;
+            const fpResult = await fp.get();
+            const deviceId = fpResult.visitorId;
+
+            // Lớp giáp Bluetooth ESP32
+            status.innerText = "🔍 Đang tìm Trạm BLE...";
+            const device = await navigator.bluetooth.requestDevice({
+                filters: [{ name: 'TRAM-DIEM-DANH' }],
+                optionalServices: [SERVICE_UUID]
+            });
+
+            status.innerText = "🔗 Đang bắt tay bảo mật...";
+            const server = await device.gatt.connect();
+            const service = await server.getPrimaryService(SERVICE_UUID);
+            const characteristic = await service.getCharacteristic(CHAR_UUID);
+
+            const challenge = Math.floor(Math.random() * 9000) + 1000;
+            const encoder = new TextEncoder();
+            await characteristic.writeValue(encoder.encode(challenge.toString()));
+            
+            await new Promise(r => setTimeout(r, 250)); 
+
+            const value = await characteristic.readValue();
+            const response = new TextDecoder().decode(value);
+            device.gatt.disconnect();
+
+            // Gửi dữ liệu lên Google Sheets
+            status.innerText = "☁️ Đang đồng bộ Cloud...";
+            const finalUrl = `${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
+            
+            const apiResponse = await fetch(finalUrl);
+            const result = await apiResponse.text();
+            
+            loader.style.display = "none";
+            btn.disabled = false;
+
+            if (result.includes("Thành công")) {
+                status.style.color = "var(--success)";
+                status.innerHTML = "🎉 " + result;
+                addHistory(mssv, true, result); 
+                document.getElementById('mssv').value = ""; 
+            } else {
+                status.style.color = "var(--error)";
+                status.innerHTML = "⚠️ " + result;
+                addHistory(mssv, false, result); 
+            }
+
+        } catch (err) {
+            loader.style.display = "none";
+            btn.disabled = false;
+            status.style.color = "var(--error)";
+            status.innerText = "❌ Lỗi: Từ chối kết nối hoặc không tìm thấy trạm!";
+            console.error(err);
+        }
+    }
+
+    // 7. CHỐNG SOI CODE (ANTI-F12)
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) return false; 
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; 
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; 
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
+    }
 </script>
 
 </body>
