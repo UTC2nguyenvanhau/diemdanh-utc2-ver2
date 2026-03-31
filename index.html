@@ -246,136 +246,97 @@
 </div>
 
 <script>
+    const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+        .then(FingerprintJS => FingerprintJS.load());
+</script>
+
+<script>
+    // DÁN LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzCByqoQ70J0732L9TkhIN0LeGxQcg2RMiLj3cIQ-D74qhI6BappOCU8tSenX-O7RfE/exec'; 
     const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
     const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
-    // 1. Dark Mode & Theme Management
-    const toggleSwitch = document.getElementById('checkbox');
-    if (localStorage.getItem('utc2_theme') === 'dark-mode') {
-        document.body.classList.add('dark-mode');
-        toggleSwitch.checked = true;
-    }
-    function toggleTheme(e) {
-        const theme = e.checked ? 'dark-mode' : 'light-mode';
-        document.body.classList.toggle('dark-mode', e.checked);
-        localStorage.setItem('utc2_theme', theme);
-    }
-
-    // 2. Remember Me
-    const mssvInput = document.getElementById('mssv');
-    mssvInput.value = localStorage.getItem('utc2_saved_mssv') || '';
-
-    // 3. Internet Connectivity
-    window.addEventListener('offline', () => {
-        document.getElementById('offline-banner').style.display = 'block';
-        document.getElementById('btnSubmit').disabled = true;
-    });
-    window.addEventListener('online', () => {
-        document.getElementById('offline-banner').style.display = 'none';
-        document.getElementById('btnSubmit').disabled = false;
-    });
-
-    // 4. Quản lý Lịch sử (LocalStorage)
-    function renderHistory() {
-        const history = JSON.parse(localStorage.getItem('utc2_history') || '[]');
-        const container = document.getElementById('history-list');
-        container.innerHTML = history.length ? '' : '<p style="text-align:center; font-size:12px; color:#8a9ba8;">Chưa có dữ liệu lịch sử</p>';
-        
-        // Hiện 5 lần gần nhất, đảo ngược để cái mới nhất lên đầu
-        history.slice().reverse().forEach(item => {
-            container.innerHTML += `
-                <div class="history-card">
-                    <div class="history-info">
-                        <span class="h-mssv">MSSV: ${item.mssv}</span>
-                        <span class="h-time">${item.timestamp}</span>
-                    </div>
-                    <span class="h-status">THÀNH CÔNG</span>
-                </div>
-            `;
-        });
-    }
-
-    function saveToHistory(mssv) {
-        const history = JSON.parse(localStorage.getItem('utc2_history') || '[]');
-        const now = new Date();
-        const timestamp = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')} - Ngày ${now.getDate()}/${now.getMonth() + 1}`;
-        
-        history.push({ mssv, timestamp });
-        if (history.length > 5) history.shift(); // Giữ tối đa 5 bản ghi
-        localStorage.setItem('utc2_history', JSON.stringify(history));
-        renderHistory();
-    }
-
-    function clearHistory() {
-        if(confirm("Bạn có chắc muốn xóa sạch lịch sử trên máy này?")) {
-            localStorage.removeItem('utc2_history');
-            renderHistory();
-        }
-    }
-    renderHistory(); // Load lịch sử khi mở trang
-
-    // 5. Cooldown & BLE Logic
-    function lockButton(btn, seconds) {
-        btn.disabled = true;
-        let left = seconds;
-        const timer = setInterval(() => {
-            btn.innerHTML = `<span>⏳ ĐỢI ${left}S...</span>`;
-            if (--left < 0) { clearInterval(timer); btn.disabled = false; btn.innerHTML = "<span>XÁC NHẬN CÓ MẶT</span>"; }
-        }, 1000);
-    }
-
     async function handleAttendance() {
-        const mssv = mssvInput.value.trim();
+        const mssv = document.getElementById('mssv').value.trim();
         const status = document.getElementById('status');
         const btn = document.getElementById('btnSubmit');
         const loader = document.getElementById('spinner');
 
-        if (!mssv) { status.style.color = "var(--error)"; status.innerText = "❌ Vui lòng nhập MSSV!"; return; }
-        localStorage.setItem('utc2_saved_mssv', mssv);
+        if (!mssv) {
+            status.style.color = "var(--error)";
+            status.innerText = "❌ Vui lòng nhập MSSV!";
+            return;
+        }
 
         try {
-            btn.disabled = true; loader.style.display = "block";
-            status.style.color = "var(--accent-color)";
-            status.innerText = "🔍 Đang quét Trạm BLE...";
+            btn.disabled = true;
+            loader.style.display = "block";
+            
+            // --- LỚP GIÁP 1: QUÉT DẤU VÂN TAY PHẦN CỨNG ---
+            status.style.color = "var(--primary)";
+            status.innerText = "🔒 Đang quét bảo mật thiết bị...";
+            const fp = await fpPromise;
+            const fpResult = await fp.get();
+            const deviceId = fpResult.visitorId; // Đây là mã băm phần cứng (Hash), không thể giả mạo!
 
+            // --- LỚP GIÁP 2: QUÉT BLUETOOTH ESP32 ---
+            status.innerText = "🔍 Đang tìm Trạm BLE...";
             const device = await navigator.bluetooth.requestDevice({
                 filters: [{ name: 'TRAM-DIEM-DANH' }],
                 optionalServices: [SERVICE_UUID]
             });
 
-            status.innerText = "🔗 Kiểm tra bảo mật...";
+            status.innerText = "🔗 Đang bắt tay bảo mật...";
             const server = await device.gatt.connect();
             const service = await server.getPrimaryService(SERVICE_UUID);
             const characteristic = await service.getCharacteristic(CHAR_UUID);
 
             const challenge = Math.floor(Math.random() * 9000) + 1000;
-            await characteristic.writeValue(new TextEncoder().encode(challenge.toString()));
-            await new Promise(r => setTimeout(r, 300)); 
+            const encoder = new TextEncoder();
+            await characteristic.writeValue(encoder.encode(challenge.toString()));
+            
+            await new Promise(r => setTimeout(r, 250)); 
+
             const value = await characteristic.readValue();
             const response = new TextDecoder().decode(value);
+            
             device.gatt.disconnect();
 
+            // --- GỬI LÊN GOOGLE SHEETS ---
             status.innerText = "☁️ Đang đồng bộ Cloud...";
-            const res = await fetch(`${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${localStorage.getItem('utc2_device_id') || 'UTC2-'+Math.random().toString(36).substr(2,9).toUpperCase()}`);
-            const result = await res.text();
+            const finalUrl = `${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
+            
+            const apiResponse = await fetch(finalUrl);
+            const result = await apiResponse.text();
             
             loader.style.display = "none";
+            btn.disabled = false;
+
             if (result.includes("Thành công")) {
                 status.style.color = "var(--success)";
-                status.innerHTML = "✅ " + result;
-                saveToHistory(mssv); // Lưu vào lịch sử máy
-                lockButton(btn, 5);
+                status.innerHTML = "🎉 " + result;
+                document.getElementById('mssv').value = ""; 
             } else {
                 status.style.color = "var(--error)";
                 status.innerHTML = "⚠️ " + result;
-                lockButton(btn, 3);
             }
+
         } catch (err) {
-            loader.style.display = "none"; btn.disabled = false;
-            status.style.color = "var(--error)"; status.innerText = "❌ Lỗi: Kết nối bị hủy!";
+            loader.style.display = "none";
+            btn.disabled = false;
+            status.style.color = "var(--error)";
+            status.innerText = "❌ Lỗi: Từ chối kết nối hoặc không tìm thấy trạm!";
             console.error(err);
         }
+    }
+
+    // --- LỚP GIÁP 3: CHỐNG SOI CODE BẰNG F12 VÀ CHUỘT PHẢI ---
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) return false; // F12
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; // Ctrl+Shift+I
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; // Ctrl+Shift+J
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U
     }
 </script>
 
