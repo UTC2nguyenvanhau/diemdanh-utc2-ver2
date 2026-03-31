@@ -224,7 +224,7 @@
     checkDeviceType(); // Chạy ngay khi load
 
     // 2. CẤU HÌNH API
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzCByqoQ70J0732L9TkhIN0LeGxQcg2RMiLj3cIQ-D74qhI6BappOCU8tSenX-O7RfE/exec'; 
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxpXuRvNKvJy2C6weXHXNLmpUQ_zdmQPp7lTOdev-1mCa-CYMVilFUe_Zyo8o1vytPe/exec'; 
     const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
     const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
@@ -301,7 +301,7 @@
             
             // Lớp giáp FingerprintJS
             status.style.color = "var(--primary)";
-            status.innerText = "🔒 Đang quét vân tay thiết bị...";
+            status.innerText = "🔒 Đang quét thông tin thiết bị...";
             const fp = await fpPromise;
             const fpResult = await fp.get();
             const deviceId = fpResult.visitorId;
@@ -313,7 +313,7 @@
                 optionalServices: [SERVICE_UUID]
             });
 
-            status.innerText = "🔗 Đang bắt tay bảo mật...";
+            status.innerText = "🔗 Đang kiểm tra bảo mật...";
             const server = await device.gatt.connect();
             const service = await server.getPrimaryService(SERVICE_UUID);
             const characteristic = await service.getCharacteristic(CHAR_UUID);
@@ -353,7 +353,7 @@
             loader.style.display = "none";
             btn.disabled = false;
             status.style.color = "var(--error)";
-            status.innerText = "❌ Lỗi: Từ chối kết nối hoặc không tìm thấy trạm!";
+            status.innerText = "❌ Lỗi: Không thể kết nối hoặc không tìm thấy trạm!";
             console.error(err);
         }
     }
