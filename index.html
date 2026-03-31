@@ -59,97 +59,83 @@
             position: relative;
         }
 
+        /* BLOCKER CHO PC/LAPTOP */
+        #desktop-blocker {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background-color: var(--bg-color); z-index: 9999; flex-direction: column; 
+            align-items: center; justify-content: center; text-align: center; padding: 20px;
+        }
+
         #offline-banner {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            background-color: var(--error);
-            color: white;
-            text-align: center;
-            padding: 8px;
-            font-size: 13px;
-            font-weight: bold;
-            z-index: 1000;
-            text-transform: uppercase;
+            display: none; position: fixed; top: 0; left: 0; right: 0;
+            background-color: var(--error); color: white; text-align: center;
+            padding: 8px; font-size: 13px; font-weight: bold; z-index: 1000; text-transform: uppercase;
         }
 
         .neumorphic-card-light {
-            background: var(--card-color);
-            padding: 55px 30px 40px 30px;
-            border-radius: 30px;
-            box-shadow: var(--dark-shadow), var(--light-shadow);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-sizing: border-box;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 30px;
-            transition: all 0.4s ease;
+            background: var(--card-color); padding: 55px 30px 40px 30px; border-radius: 30px;
+            box-shadow: var(--dark-shadow), var(--light-shadow); width: 100%; max-width: 400px;
+            text-align: center; box-sizing: border-box; position: relative; overflow: hidden;
+            margin-bottom: 30px; transition: all 0.4s ease;
         }
 
-        .theme-switch-wrapper {
-            position: absolute;
-            top: 20px; left: 20px;
-            display: flex; align-items: center; z-index: 10;
-        }
-
+        .theme-switch-wrapper { position: absolute; top: 20px; left: 20px; display: flex; align-items: center; z-index: 10; }
         .theme-switch { display: inline-block; height: 24px; position: relative; width: 46px; }
         .theme-switch input { display: none; }
-
-        .slider {
-            background-color: #cbd4db; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 24px;
-        }
-
-        .slider:before {
-            background-color: #fff; bottom: 3px; content: ""; height: 18px; left: 3px; position: absolute; transition: .4s; width: 18px; border-radius: 50%;
-        }
-
+        .slider { background-color: #cbd4db; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 24px; }
+        .slider:before { background-color: #fff; bottom: 3px; content: ""; height: 18px; left: 3px; position: absolute; transition: .4s; width: 18px; border-radius: 50%; }
         input:checked + .slider { background-color: var(--accent-color); }
         input:checked + .slider:before { transform: translateX(22px); }
 
         .celebration-ribbon {
-            position: absolute; top: 15px; right: -35px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: var(--golden); padding: 7px 40px; font-size: 10px; font-weight: 700; transform: rotate(45deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); z-index: 10;
+            position: absolute; top: 15px; right: -35px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); 
+            color: var(--golden); padding: 7px 40px; font-size: 10px; font-weight: 700; transform: rotate(45deg); 
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2); z-index: 10;
         }
 
         .logo-container {
-            width: 130px; height: 130px; margin: 0 auto 25px auto; border-radius: 50%; background: var(--card-color); box-shadow: var(--dark-shadow), var(--light-shadow); display: flex; align-items: center; justify-content: center; animation: float-light 6s ease-in-out infinite; transition: all 0.4s ease;
+            width: 130px; height: 130px; margin: 0 auto 25px auto; border-radius: 50%; background: var(--card-color); 
+            box-shadow: var(--dark-shadow), var(--light-shadow); display: flex; align-items: center; 
+            justify-content: center; animation: float-light 6s ease-in-out infinite; transition: all 0.4s ease;
         }
 
         @keyframes float-light { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px) rotate(3deg); } 100% { transform: translateY(0px); } }
 
         .logo-school { width: 95px; height: auto; }
-
         h2 { font-size: 22px; font-weight: 900; margin: 0 0 8px 0; color: var(--primary-color); text-transform: uppercase; }
-
         .uni-name { font-size: 13px; color: #8a9ba8; margin-bottom: 30px; font-weight: 500; line-height: 1.5; text-transform: uppercase; }
 
         input[type="number"] {
-            width: 100%; height: 55px; background: var(--input-bg); border: 2px solid var(--input-border); border-radius: 15px; font-size: 18px; font-weight: 700; color: var(--primary-color); text-align: center; box-sizing: border-box; box-shadow: var(--inset-dark), var(--inset-light); outline: none; transition: all 0.4s ease;
+            width: 100%; height: 55px; background: var(--input-bg); border: 2px solid var(--input-border); 
+            border-radius: 15px; font-size: 18px; font-weight: 700; color: var(--primary-color); 
+            text-align: center; box-sizing: border-box; box-shadow: var(--inset-dark), var(--inset-light); 
+            outline: none; transition: all 0.4s ease;
         }
 
         button#btnSubmit {
-            width: 100%; height: 55px; background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%); color: #ffffff; border: none; border-radius: 15px; font-size: 17px; font-weight: 700; cursor: pointer; box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2); display: flex; align-items: center; justify-content: center; margin-top: 20px; transition: all 0.3s ease;
+            width: 100%; height: 55px; background: linear-gradient(135deg, #66b3ff 0%, #0073e6 100%); 
+            color: #ffffff; border: none; border-radius: 15px; font-size: 17px; font-weight: 700; 
+            cursor: pointer; box-shadow: 5px 5px 12px rgba(0, 115, 230, 0.2); display: flex; 
+            align-items: center; justify-content: center; margin-top: 20px; transition: all 0.3s ease;
         }
 
         button#btnSubmit:disabled { background: #cbd4db; color: #8a9ba8; cursor: not-allowed; box-shadow: none; }
 
         #status-container { margin-top: 25px; min-height: 45px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-
         .loader { display: none; width: 26px; height: 26px; border: 3px solid var(--input-border); border-top: 3px solid var(--accent-color); border-radius: 50%; animation: spin 0.8s linear infinite; }
-
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* PHẦN LỊCH SỬ ĐIỂM DANH */
+        /* LỊCH SỬ ĐIỂM DANH */
         .history-section { width: 100%; max-width: 400px; text-align: left; }
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 0 10px; }
         .history-header span { font-size: 14px; font-weight: 900; color: #8a9ba8; letter-spacing: 1px; }
         .clear-btn { font-size: 12px; color: var(--error); cursor: pointer; font-weight: 700; }
         
         .history-card {
-            background: var(--card-color); padding: 15px; border-radius: 20px; box-shadow: var(--dark-shadow), var(--light-shadow); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; animation: slideUp 0.4s ease-out forwards; transition: all 0.4s ease;
+            background: var(--card-color); padding: 15px; border-radius: 20px; box-shadow: var(--dark-shadow), var(--light-shadow); 
+            margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; 
+            animation: slideUp 0.4s ease-out forwards; transition: all 0.4s ease;
         }
-
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .history-info { display: flex; flex-direction: column; }
@@ -164,9 +150,15 @@
 </head>
 <body>
 
+<div id="desktop-blocker">
+    <h1 style="color: var(--error); font-size: 60px; margin-bottom: 10px;">🚫</h1>
+    <h2 style="color: var(--primary-color);">TỪ CHỐI THIẾT BỊ</h2>
+    <p style="color: #8a9ba8; font-weight: 500; font-size: 16px;">Vui lòng sử dụng <b>Điện thoại thông minh (Smartphone)</b> để quét mã.<br>PC & Laptop không được hỗ trợ để đảm bảo tính minh bạch.</p>
+</div>
+
 <div id="offline-banner">⚠️ Đã mất kết nối Internet! Hệ thống tạm khóa.</div>
 
-<div class="neumorphic-card-light">
+<div class="neumorphic-card-light" id="main-app">
     <div class="theme-switch-wrapper">
         <label class="theme-switch">
             <input type="checkbox" id="checkbox" onchange="toggleTheme(this)" />
@@ -197,50 +189,72 @@
     </div>
 </div>
 
-<div class="history-section">
+<div class="history-section" id="history-section">
     <div class="history-header">
         <span>LỊCH SỬ ĐIỂM DANH</span>
         <span class="clear-btn" onclick="clearHistory()">Xóa</span>
     </div>
-    <div id="history-list">
-        </div>
+    <div id="history-list"></div>
 </div>
 
-<div class="footer">
+<div class="footer" id="main-footer">
     Chào mừng 51 năm Ngày Giải phóng miền Nam (30/4/1975 - 30/4/2026)<br>
     © 2026 Nghiên cứu khoa học<br>
     Bảo mật: ESP32 BLE + Cloud Anti-Cheat
 </div>
 
 <script>
-    // 1. TẢI THƯ VIỆN FINGERPRINT TRƯỚC
     const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4').then(FingerprintJS => FingerprintJS.load());
+</script>
 
-    // 2. KHAI BÁO CẤU HÌNH
+<script>
+    // 1. KIỂM TRA THIẾT BỊ (CHẶN PC/LAPTOP)
+    function checkDeviceType() {
+        const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const hasTouchScreen = (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+        
+        if (!isMobileUA || !hasTouchScreen) {
+            document.getElementById('desktop-blocker').style.display = 'flex';
+            document.body.style.overflow = 'hidden'; 
+            document.getElementById('main-app').style.display = 'none';
+            document.getElementById('history-section').style.display = 'none';
+            document.getElementById('main-footer').style.display = 'none';
+        }
+    }
+    checkDeviceType(); // Chạy ngay khi load
+
+    // 2. CẤU HÌNH API
     const scriptURL = 'https://script.google.com/macros/s/AKfycbzCByqoQ70J0732L9TkhIN0LeGxQcg2RMiLj3cIQ-D74qhI6BappOCU8tSenX-O7RfE/exec'; 
     const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
     const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
-    // ================= CÁC HÀM XỬ LÝ GIAO DIỆN =================
-    
-    // Hàm bật/tắt Dark Mode
+    // 3. XỬ LÝ GIAO DIỆN & LOCAL STORAGE
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('utc2_theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            document.getElementById('checkbox').checked = true;
+        }
+    });
+
     function toggleTheme(element) {
         if (element.checked) {
             document.body.classList.add('dark-mode');
+            localStorage.setItem('utc2_theme', 'dark');
         } else {
             document.body.classList.remove('dark-mode');
+            localStorage.setItem('utc2_theme', 'light');
         }
     }
 
-    // Hàm thêm lịch sử vào danh sách
+    // 4. LỊCH SỬ ĐIỂM DANH
     function addHistory(mssv, isSuccess, message) {
         const historyList = document.getElementById('history-list');
         const now = new Date();
-        const timeStr = now.toLocaleTimeString('vi-VN'); // Lấy giờ Việt Nam
+        const timeStr = now.toLocaleTimeString('vi-VN');
         
         const card = document.createElement('div');
         card.className = 'history-card';
-        
         const statusClass = isSuccess ? 'h-success' : 'h-error';
         const statusText = isSuccess ? 'Thành công' : 'Thất bại';
 
@@ -251,28 +265,24 @@
             </div>
             <span class="h-status ${statusClass}">${statusText}</span>
         `;
-        // Chèn lên đầu danh sách
         historyList.prepend(card);
     }
 
-    // Hàm xóa toàn bộ lịch sử
     function clearHistory() {
         document.getElementById('history-list').innerHTML = '';
     }
 
-    // Lắng nghe sự kiện Mất mạng / Có mạng
-    window.addEventListener('offline', function() {
+    // 5. CẢNH BÁO MẤT MẠNG
+    window.addEventListener('offline', () => {
         document.getElementById('offline-banner').style.display = 'block';
         document.getElementById('btnSubmit').disabled = true;
     });
-
-    window.addEventListener('online', function() {
+    window.addEventListener('online', () => {
         document.getElementById('offline-banner').style.display = 'none';
         document.getElementById('btnSubmit').disabled = false;
     });
 
-    // ================= HÀM XỬ LÝ ĐIỂM DANH CHÍNH =================
-
+    // 6. XỬ LÝ ĐIỂM DANH (LÕI)
     async function handleAttendance() {
         const mssv = document.getElementById('mssv').value.trim();
         const status = document.getElementById('status');
@@ -289,14 +299,14 @@
             btn.disabled = true;
             loader.style.display = "block";
             
-            // --- LỚP GIÁP 1: QUÉT DẤU VÂN TAY PHẦN CỨNG ---
+            // Lớp giáp FingerprintJS
             status.style.color = "var(--primary)";
-            status.innerText = "🔒 Đang quét bảo mật thiết bị...";
+            status.innerText = "🔒 Đang quét vân tay thiết bị...";
             const fp = await fpPromise;
             const fpResult = await fp.get();
             const deviceId = fpResult.visitorId;
 
-            // --- LỚP GIÁP 2: QUÉT BLUETOOTH ESP32 ---
+            // Lớp giáp Bluetooth ESP32
             status.innerText = "🔍 Đang tìm Trạm BLE...";
             const device = await navigator.bluetooth.requestDevice({
                 filters: [{ name: 'TRAM-DIEM-DANH' }],
@@ -316,10 +326,9 @@
 
             const value = await characteristic.readValue();
             const response = new TextDecoder().decode(value);
-            
             device.gatt.disconnect();
 
-            // --- GỬI LÊN GOOGLE SHEETS ---
+            // Gửi dữ liệu lên Google Sheets
             status.innerText = "☁️ Đang đồng bộ Cloud...";
             const finalUrl = `${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
             
@@ -332,12 +341,12 @@
             if (result.includes("Thành công")) {
                 status.style.color = "var(--success)";
                 status.innerHTML = "🎉 " + result;
-                addHistory(mssv, true, result); // Lưu lịch sử thành công
+                addHistory(mssv, true, result); 
                 document.getElementById('mssv').value = ""; 
             } else {
                 status.style.color = "var(--error)";
                 status.innerHTML = "⚠️ " + result;
-                addHistory(mssv, false, result); // Lưu lịch sử thất bại
+                addHistory(mssv, false, result); 
             }
 
         } catch (err) {
@@ -349,7 +358,7 @@
         }
     }
 
-    // --- LỚP GIÁP 3: CHỐNG SOI CODE ---
+    // 7. CHỐNG SOI CODE (ANTI-F12)
     document.addEventListener('contextmenu', event => event.preventDefault());
     document.onkeydown = function(e) {
         if (e.keyCode == 123) return false; 
