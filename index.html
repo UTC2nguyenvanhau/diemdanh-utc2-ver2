@@ -301,7 +301,7 @@
             
             // Lớp giáp FingerprintJS
             status.style.color = "var(--primary)";
-            status.innerText = "🔒 Đang quét vân tay thiết bị...";
+            status.innerText = "🔒 Đang quét thông tin thiết bị...";
             const fp = await fpPromise;
             const fpResult = await fp.get();
             const deviceId = fpResult.visitorId;
@@ -313,7 +313,7 @@
                 optionalServices: [SERVICE_UUID]
             });
 
-            status.innerText = "🔗 Đang bắt tay bảo mật...";
+            status.innerText = "🔗 Đang kiểm tra bảo mật...";
             const server = await device.gatt.connect();
             const service = await server.getPrimaryService(SERVICE_UUID);
             const characteristic = await service.getCharacteristic(CHAR_UUID);
@@ -329,7 +329,7 @@
             device.gatt.disconnect();
 
             // Gửi dữ liệu lên Google Sheets
-            status.innerText = "☁️ Đang đồng bộ Cloud...";
+            status.innerText = "☁️ Đang đồng bộ...";
             const finalUrl = `${scriptURL}?mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
             
             const apiResponse = await fetch(finalUrl);
