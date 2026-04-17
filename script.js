@@ -1,7 +1,7 @@
 // ==========================================
 // CẤU HÌNH HỆ THỐNG
 // ==========================================
-const scriptURL = 'https://script.google.com/macros/s/AKfycbxqjZjDJYbvjShm_j1sru4mvamds-LzHpiKx308ZWqdrXES5DRsdHk4hV3NhdEuv331/exec'; // <-- DÁN LINK APPS SCRIPT VÀO ĐÂY
+const scriptURL = 'https://script.google.com/macros/s/AKfycbynGQ30GcS9Ww72xEDoIIZVhVEX_5eiGj0WgwxY9cd1PGoSg8m0wW36IQK9IRfUecbj/exec'; // <-- DÁN LINK APPS SCRIPT VÀO ĐÂY
 const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 const fpPromise = FingerprintJS.load();
