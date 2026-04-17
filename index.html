@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
+    <script src="https://openfpcdn.io/fingerprintjs/v4/iife.min.js"></script>
 </head>
 <body>
 
@@ -35,20 +36,42 @@
         <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/03/Logo-Dai-Hoc-Giao-Thong-Van-Tai-UTC.png" class="logo-school" alt="UTC Logo">
     </div>
     
-    <h2>ĐIỂM DANH SINH VIÊN</h2>
-    <div class="uni-name">Trường Đại học Giao thông Vận tải<br>Phân hiệu tại TP.HCM</div>
+    <h2>UTC2 ATTENDANCE</h2>
+    <div class="uni-name">Cổng Xác Thực Sinh Viên</div>
 
-    <div class="input-group">
-        <input type="number" id="mssv" placeholder="Nhập mã số sinh viên" autocomplete="off">
+    <div id="login-screen">
+        <input type="number" id="login-mssv" class="form-control" placeholder="Nhập Mã số sinh viên">
+        <input type="password" id="login-pass" class="form-control" placeholder="Mật khẩu (Ngày sinh DDMMYYYY)">
+        <button onclick="handleLogin()" class="btn-primary" id="btnLogin">ĐĂNG NHẬP</button>
     </div>
 
-    <button onclick="handleAttendance()" id="btnSubmit">
-        <span>XÁC NHẬN CÓ MẶT</span>
-    </button>
+    <div id="change-pass-screen" style="display: none;">
+        <h3 style="color: var(--error); font-size: 16px; margin-bottom: 5px;">⚠️ BẮT BUỘC ĐỔI MẬT KHẨU</h3>
+        <p style="font-size: 12px; color: var(--text-gray); margin-bottom: 15px;">Đây là lần đăng nhập đầu tiên của bạn.</p>
+        <input type="password" id="new-pass" class="form-control" placeholder="Nhập mật khẩu mới">
+        <input type="password" id="confirm-pass" class="form-control" placeholder="Xác nhận mật khẩu mới">
+        <button onclick="handleChangePass()" class="btn-primary" id="btnChangePass">CẬP NHẬT</button>
+    </div>
+
+    <div id="attendance-screen" style="display: none;">
+        <div class="user-info">
+            <p>Xin chào, <b id="student-name" style="color: var(--accent-color); font-size: 18px;"></b></p>
+            <p style="font-size: 12px; color: var(--text-gray);">MSSV: <span id="student-mssv"></span></p>
+        </div>
+        
+        <select id="class-select" class="form-control" style="margin-top: 15px;">
+            <option value="">-- Đang tải danh sách lớp --</option>
+        </select>
+
+        <button onclick="handleAttendance()" class="btn-primary" id="btnSubmit">
+            <span>CHẠM ĐỂ QUÉT BLE</span>
+        </button>
+        <button onclick="logout()" class="btn-secondary">ĐĂNG XUẤT</button>
+    </div>
 
     <div id="status-container">
         <div class="loader" id="spinner"></div>
-        <div id="status" style="font-weight: 700; font-size: 15px;">Sẵn sàng kết nối</div>
+        <div id="status" style="font-weight: 700; font-size: 14px; text-align: center;">Sẵn sàng kết nối</div>
     </div>
 </div>
 
@@ -62,7 +85,7 @@
 
 <div class="footer" id="main-footer">
     Chào mừng 51 năm Ngày Giải phóng miền Nam (30/4/1975 - 30/4/2026)<br>
-    © 2026 Nghiên cứu khoa học<br>
+    © 2026 Nghiên cứu khoa học - Hệ thống nhúng & IoT<br>
     Bảo mật: ESP32 BLE + Cloud Anti-Cheat
 </div>
 
