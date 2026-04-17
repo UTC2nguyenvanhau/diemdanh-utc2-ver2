@@ -1,13 +1,35 @@
 // ==========================================
 // CẤU HÌNH HỆ THỐNG
 // ==========================================
-const scriptURL = 'https://script.google.com/macros/s/AKfycbwRLuFo3-7Zmo_KNz3DPaiCmHy7nPz-Z19n1LwXK7p2wqwsZs6Q-LzE77ZnixrwLNIW/exec'; 
+const scriptURL = 'https://script.google.com/macros/s/AKfycbwRLuFo3-7Zmo_KNz3DPaiCmHy7nPz-Z19n1LwXK7p2wqwsZs6Q-LzE77ZnixrwLNIW/exec'; // <-- DÁN LINK APPS SCRIPT VÀO ĐÂY
 const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 const fpPromise = FingerprintJS.load();
 
 // ==========================================
-// 1. KIỂM TRA THIẾT BỊ & GIAO DIỆN
+// ĐỔI GIAO DIỆN (Sáng/Tối) VÀ GHI NHỚ
+// ==========================================
+function toggleTheme(checkbox) {
+    if(checkbox.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark'); 
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('theme', 'light'); 
+    }
+}
+
+function applySavedTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const checkbox = document.getElementById('checkbox');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if(checkbox) checkbox.checked = true;
+    }
+}
+
+// ==========================================
+// KIỂM TRA THIẾT BỊ & MẠNG
 // ==========================================
 function checkDeviceType() {
     const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -23,26 +45,23 @@ function checkDeviceType() {
 }
 checkDeviceType();
 
-window.addEventListener('offline', () => {
-    document.getElementById('offline-banner').style.display = 'block';
-});
-window.addEventListener('online', () => {
-    document.getElementById('offline-banner').style.display = 'none';
-});
+window.addEventListener('offline', () => { document.getElementById('offline-banner').style.display = 'block'; });
+window.addEventListener('online', () => { document.getElementById('offline-banner').style.display = 'none'; });
 
 // ==========================================
-// 2. QUẢN LÝ PHIÊN ĐĂNG NHẬP (SESSION)
+// QUẢN LÝ PHIÊN ĐĂNG NHẬP
 // ==========================================
 window.onload = () => {
+    applySavedTheme(); 
+    
     const savedMssv = localStorage.getItem('utc2_mssv');
     const savedName = localStorage.getItem('utc2_name');
     
     if (savedMssv && savedName) {
-        // Đã đăng nhập -> Bỏ qua login, vào thẳng màn hình điểm danh
         showScreen('attendance-screen');
         document.getElementById('student-name').innerText = savedName;
         document.getElementById('student-mssv').innerText = savedMssv;
-        loadClasses(); // Tải danh sách lớp từ Google Sheets
+        loadClasses(); 
     } else {
         showScreen('login-screen');
     }
@@ -67,7 +86,7 @@ function setStatus(text, type = "normal", isLoading = false) {
 }
 
 // ==========================================
-// 3. XỬ LÝ ĐĂNG NHẬP & ĐỔI MẬT KHẨU
+// XỬ LÝ ĐĂNG NHẬP & ĐỔI MẬT KHẨU
 // ==========================================
 async function handleLogin() {
     const mssv = document.getElementById('login-mssv').value.trim();
@@ -138,7 +157,7 @@ function logout() {
 }
 
 // ==========================================
-// 4. LẤY DANH SÁCH LỚP HỌC (AUTO LOAD)
+// LẤY DANH SÁCH LỚP HỌC 
 // ==========================================
 async function loadClasses() {
     const select = document.getElementById('class-select');
@@ -163,7 +182,7 @@ async function loadClasses() {
 }
 
 // ==========================================
-// 5. XỬ LÝ ĐIỂM DANH BLE (LÕI)
+// XỬ LÝ ĐIỂM DANH BLE
 // ==========================================
 async function handleAttendance() {
     const mssv = localStorage.getItem('utc2_mssv');
@@ -225,7 +244,7 @@ async function handleAttendance() {
 }
 
 // ==========================================
-// 6. LỊCH SỬ & ANTI CHÍP (GIỮ NGUYÊN)
+// LỊCH SỬ & ANTI CHÍP 
 // ==========================================
 function addHistory(className, isSuccess) {
     const historyList = document.getElementById('history-list');
