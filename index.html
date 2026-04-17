@@ -36,17 +36,17 @@
         <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/03/Logo-Dai-Hoc-Giao-Thong-Van-Tai-UTC.png" class="logo-school" alt="UTC Logo">
     </div>
     
-    <h2>UTC2 ATTENDANCE</h2>
+    <h2>HỆ THỐNG ĐIỂM DANH THÔNG MINH</h2>
     <div class="uni-name">Cổng Xác Thực Sinh Viên</div>
 
     <div id="login-screen">
         <input type="number" id="login-mssv" class="form-control" placeholder="Nhập Mã số sinh viên">
-        <input type="password" id="login-pass" class="form-control" placeholder="Mật khẩu (Ngày sinh DDMMYYYY)">
+        <input type="password" id="login-pass" class="form-control" placeholder="Mật khẩu">
         <button onclick="handleLogin()" class="btn-primary" id="btnLogin">ĐĂNG NHẬP</button>
     </div>
 
     <div id="change-pass-screen" style="display: none;">
-        <h3 style="color: var(--error); font-size: 16px; margin-bottom: 5px;">⚠️ BẮT BUỘC ĐỔI MẬT KHẨU</h3>
+        <h3 style="color: var(--error); font-size: 16px; margin-bottom: 5px;">⚠️ XIN VUI LÒNG ĐỔI MẬT KHẨU</h3>
         <p style="font-size: 12px; color: var(--text-gray); margin-bottom: 15px;">Đây là lần đăng nhập đầu tiên của bạn.</p>
         <input type="password" id="new-pass" class="form-control" placeholder="Nhập mật khẩu mới">
         <input type="password" id="confirm-pass" class="form-control" placeholder="Xác nhận mật khẩu mới">
@@ -64,7 +64,7 @@
         </select>
 
         <button onclick="handleAttendance()" class="btn-primary" id="btnSubmit">
-            <span>CHẠM ĐỂ QUÉT BLE</span>
+            <span>NHẤN ĐỂ ĐIỂM DANH</span>
         </button>
         <button onclick="logout()" class="btn-secondary">ĐĂNG XUẤT</button>
     </div>
