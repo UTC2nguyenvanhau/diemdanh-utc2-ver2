@@ -1,0 +1,17 @@
+{
+  "name": "Điểm Danh UTC2",
+  "short_name": "UTC2 Check-in",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#eaf1f9",
+  "theme_color": "#003366",
+  "description": "App điểm danh sinh viên UTC2 bằng công nghệ BLE",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3592/3592863.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
