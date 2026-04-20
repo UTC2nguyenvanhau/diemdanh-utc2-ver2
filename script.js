@@ -1,3 +1,11 @@
+// KHỞI ĐỘNG CHẾ ĐỘ APP (SERVICE WORKER)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('Đã cài đặt App thành công!'))
+      .catch(err => console.log('Lỗi cài đặt App: ', err));
+  });
+}
 // ==========================================
 // CẤU HÌNH HỆ THỐNG
 // ==========================================
