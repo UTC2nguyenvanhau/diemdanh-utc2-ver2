@@ -1,35 +1,48 @@
-// KHỞI ĐỘNG CHẾ ĐỘ APP (SERVICE WORKER)
+// ==========================================
+// ĐĂNG KÝ APP OFFLINE (PWA)
+// ==========================================
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js')
-      .then(reg => console.log('Đã cài đặt App thành công!'))
-      .catch(err => console.log('Lỗi cài đặt App: ', err));
-  });
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('Lỗi cài App: ', err));
+    });
 }
+
 // ==========================================
 // CẤU HÌNH HỆ THỐNG
 // ==========================================
-const scriptURL = 'https://script.google.com/macros/s/AKfycbynGQ30GcS9Ww72xEDoIIZVhVEX_5eiGj0WgwxY9cd1PGoSg8m0wW36IQK9IRfUecbj/exec'; // <-- DÁN LINK APPS SCRIPT VÀO ĐÂY
+// DÁN LINK APPS SCRIPT V3.0 (BẢN TRẢ VỀ JSON) VÀO ĐÂY:
+const scriptURL = 'https://script.google.com/macros/s/AKfycbynGQ30GcS9Ww72xEDoIIZVhVEX_5eiGj0WgwxY9cd1PGoSg8m0wW36IQK9IRfUecbj/exec'; 
 const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
 // ==========================================
-// THUẬT TOÁN ANTI-CHEAT (TẠO ID NGẪU NHIÊN CỐ ĐỊNH)
+// THUẬT TOÁN TẠO ID THIẾT BỊ (CHỐNG GIAN LẬN)
 // ==========================================
 function getDeviceUUID() {
-    // 1. Kiểm tra xem máy này đã được cấp ID chưa
     let uuid = localStorage.getItem('utc2_device_uuid');
-    
-    // 2. Nếu chưa có (Lần đầu mở web), tạo một mã ngẫu nhiên độc nhất vô nhị
     if (!uuid) {
         uuid = 'UTC2_DEV_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 12);
-        localStorage.setItem('utc2_device_uuid', uuid); // Khóa chặt ID này vào máy
+        localStorage.setItem('utc2_device_uuid', uuid);
     }
     return uuid;
 }
 
 // ==========================================
-// ĐỔI GIAO DIỆN (Sáng/Tối) VÀ GHI NHỚ
+// TÍNH NĂNG ẨN/HIỆN MẬT KHẨU
+// ==========================================
+function togglePassword(inputId, icon) {
+    const input = document.getElementById(inputId);
+    if (input.type === "password") {
+        input.type = "text";
+        icon.innerText = "🙈"; 
+    } else {
+        input.type = "password";
+        icon.innerText = "👁️";  
+    }
+}
+
+// ==========================================
+// GIAO DIỆN & KIỂM TRA THIẾT BỊ
 // ==========================================
 function toggleTheme(checkbox) {
     if(checkbox.checked) {
@@ -50,9 +63,6 @@ function applySavedTheme() {
     }
 }
 
-// ==========================================
-// KIỂM TRA THIẾT BỊ & MẠNG
-// ==========================================
 function checkDeviceType() {
     const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const hasTouchScreen = (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
@@ -71,7 +81,7 @@ window.addEventListener('offline', () => { document.getElementById('offline-bann
 window.addEventListener('online', () => { document.getElementById('offline-banner').style.display = 'none'; });
 
 // ==========================================
-// QUẢN LÝ PHIÊN ĐĂNG NHẬP
+// PHIÊN ĐĂNG NHẬP
 // ==========================================
 window.onload = () => {
     applySavedTheme(); 
@@ -119,7 +129,7 @@ async function handleLogin() {
     document.getElementById('btnLogin').disabled = true;
 
     try {
-        const res = await fetch(`${scriptURL}?action=login&mssv=${mssv}&pass=${pass}`);
+        const res = await fetch(`${scriptURL}?action=login&mssv=${mssv}&pass=${encodeURIComponent(pass)}`);
         const data = await res.json();
 
         if (data.success) {
@@ -147,17 +157,18 @@ async function handleChangePass() {
     const confirmPass = document.getElementById('confirm-pass').value.trim();
     const mssv = localStorage.getItem('temp_mssv');
 
-    if (newPass.length < 6) return setStatus("⚠️ Mật khẩu phải từ 6 ký tự!", "error");
+    if (newPass.length < 6 || newPass.length > 20) return setStatus("⚠️ Mật khẩu phải từ 6 đến 20 ký tự!", "error");
+    if (newPass.includes(" ")) return setStatus("⚠️ Mật khẩu không được chứa khoảng trắng!", "error");
     if (newPass !== confirmPass) return setStatus("⚠️ Mật khẩu xác nhận không khớp!", "error");
 
     setStatus("Đang cập nhật mật khẩu...", "normal", true);
     document.getElementById('btnChangePass').disabled = true;
 
     try {
-        const res = await fetch(`${scriptURL}?action=changePass&mssv=${mssv}&newPass=${newPass}`);
+        const res = await fetch(`${scriptURL}?action=changePass&mssv=${mssv}&newPass=${encodeURIComponent(newPass)}`);
         const msg = await res.text();
         
-        alert("✅ " + msg);
+        Swal.fire({ icon: 'success', title: 'Thành công', text: msg, confirmButtonColor: '#003366' });
         completeLogin(mssv, localStorage.getItem('temp_name'));
     } catch (e) {
         setStatus("❌ Lỗi mạng, thử lại sau", "error");
@@ -172,16 +183,26 @@ function completeLogin(mssv, name) {
 }
 
 function logout() {
-    if(confirm("Bạn có chắc chắn muốn đăng xuất thiết bị này?")) {
-        // Cố tình không xóa 'utc2_device_uuid' để lưu vết gian lận nếu có
-        localStorage.removeItem('utc2_mssv');
-        localStorage.removeItem('utc2_name');
-        window.location.reload();
-    }
+    Swal.fire({
+        title: 'Đăng xuất?',
+        text: "Bạn có chắc chắn muốn thoát khỏi thiết bị này?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e74c3c',
+        cancelButtonColor: '#8a9ba8',
+        confirmButtonText: 'Đăng xuất',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.removeItem('utc2_mssv');
+            localStorage.removeItem('utc2_name');
+            window.location.reload();
+        }
+    })
 }
 
 // ==========================================
-// LẤY DANH SÁCH LỚP HỌC 
+// TẢI DANH SÁCH LỚP
 // ==========================================
 async function loadClasses() {
     const select = document.getElementById('class-select');
@@ -206,7 +227,7 @@ async function loadClasses() {
 }
 
 // ==========================================
-// XỬ LÝ ĐIỂM DANH BLE
+// XỬ LÝ ĐIỂM DANH BLE + GỌI API JSON
 // ==========================================
 async function handleAttendance() {
     const mssv = localStorage.getItem('utc2_mssv');
@@ -217,18 +238,16 @@ async function handleAttendance() {
 
     try {
         btn.disabled = true;
-        setStatus("🔒 Đang thiết lập mã định danh an toàn...", "normal", true);
-        
-        // Gọi hàm cấp ID ngẫu nhiên cố định thay vì FingerprintJS
+        setStatus("🔒 Đang tạo mã định danh...", "normal", true);
         const deviceId = getDeviceUUID();
 
-        setStatus("🔍 Đang tìm Trạm điểm danh (Bật Bluetooth)...", "normal", true);
+        setStatus("🔍 Bật Bluetooth & Quét tìm Trạm...", "normal", true);
         const device = await navigator.bluetooth.requestDevice({
             filters: [{ name: 'TRAM-DIEM-DANH' }],
             optionalServices: [SERVICE_UUID]
         });
 
-        setStatus("🔗 Đang giải mã phần cứng ESP32...", "normal", true);
+        setStatus("🔗 Đang giải mã ESP32...", "normal", true);
         const server = await device.gatt.connect();
         const service = await server.getPrimaryService(SERVICE_UUID);
         const characteristic = await service.getCharacteristic(CHAR_UUID);
@@ -243,41 +262,68 @@ async function handleAttendance() {
         const response = new TextDecoder().decode(value);
         device.gatt.disconnect();
 
-        setStatus("☁️ Đang đồng bộ với Cloud trường...", "normal", true);
+        setStatus("☁️ Đang đồng bộ Cloud trường...", "normal", true);
         const finalUrl = `${scriptURL}?action=checkin&classId=${encodeURIComponent(classId)}&mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
         
         const apiResponse = await fetch(finalUrl);
-        const result = await apiResponse.text();
+        const result = await apiResponse.json(); 
         
         btn.disabled = false;
 
-        if (result.includes("Thành công")) {
-            setStatus("🎉 " + result, "success");
+        // HIỂN THỊ POPUP CHI TIẾT
+        if (result.success) {
+            setStatus("🎉 Hoàn tất", "success");
             addHistory(classId, true); 
+            
+            Swal.fire({
+                icon: result.type === 'ALREADY_DONE' ? 'info' : 'success',
+                title: result.title,
+                text: result.message,
+                confirmButtonColor: '#003366',
+                confirmButtonText: 'Đóng'
+            });
         } else {
-            setStatus("⚠️ " + result, "error");
+            setStatus("⚠️ " + result.title, "error");
             addHistory(classId, false); 
+            
+            Swal.fire({
+                icon: 'error',
+                title: result.title,
+                text: result.message,
+                footer: `<b style="color: #e74c3c;">Giải pháp: </b> &nbsp; ${result.action}`,
+                confirmButtonColor: '#e74c3c',
+                confirmButtonText: 'Đã hiểu'
+            });
         }
 
     } catch (err) {
         btn.disabled = false;
-        setStatus("❌ Lỗi: Từ chối kết nối hoặc không đứng gần Trạm!", "error");
+        setStatus("❌ Không quét được Trạm BLE!", "error");
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi Kết Nối BLE',
+            text: 'Không thể giao tiếp với hộp ESP32. Hãy đứng gần thiết bị, bật Bluetooth và thử lại.',
+            confirmButtonColor: '#e74c3c'
+        });
         console.error(err);
     }
 }
 
 // ==========================================
-// LỊCH SỬ & ANTI CHÍP 
+// LỊCH SỬ (CÓ NGÀY GIỜ)
 // ==========================================
 function addHistory(className, isSuccess) {
     const historyList = document.getElementById('history-list');
-    const timeStr = new Date().toLocaleTimeString('vi-VN');
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('vi-VN');
+    const dateStr = now.toLocaleDateString('vi-VN'); 
+    
     const card = document.createElement('div');
     card.className = 'history-card';
     card.innerHTML = `
         <div class="history-info">
             <span class="h-mssv">${className}</span>
-            <span class="h-time">${timeStr}</span>
+            <span class="h-time">Ngày: ${dateStr} - Giờ: ${timeStr}</span>
         </div>
         <span class="h-status ${isSuccess ? 'h-success' : 'h-error'}">${isSuccess ? 'Thành công' : 'Thất bại'}</span>
     `;
@@ -285,6 +331,7 @@ function addHistory(className, isSuccess) {
 }
 function clearHistory() { document.getElementById('history-list').innerHTML = ''; }
 
+// Chống Inspect
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.onkeydown = function(e) {
     if (e.keyCode == 123) return false; 
