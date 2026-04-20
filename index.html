@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hệ Thống Điểm Danh UTC2</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -48,15 +48,35 @@
 
     <div id="login-screen">
         <input type="number" id="login-mssv" class="form-control" placeholder="Nhập Mã số sinh viên">
-        <input type="password" id="login-pass" class="form-control" placeholder="Mật khẩu">
+        
+        <div class="password-wrapper">
+            <input type="password" id="login-pass" class="form-control" placeholder="Mật khẩu">
+            <span class="toggle-password" onclick="togglePassword('login-pass', this)">👁️</span>
+        </div>
+        
         <button onclick="handleLogin()" class="btn-primary" id="btnLogin">ĐĂNG NHẬP</button>
     </div>
 
     <div id="change-pass-screen" style="display: none;">
         <h3 style="color: var(--error); font-size: 16px; margin-bottom: 5px;">⚠️ XIN VUI LÒNG ĐỔI MẬT KHẨU</h3>
         <p style="font-size: 12px; color: var(--text-gray); margin-bottom: 15px;">Đây là lần đăng nhập đầu tiên của bạn.</p>
-        <input type="password" id="new-pass" class="form-control" placeholder="Nhập mật khẩu mới">
-        <input type="password" id="confirm-pass" class="form-control" placeholder="Xác nhận mật khẩu mới">
+        
+        <ul class="password-rules">
+            <li>Tối thiểu <b>6 ký tự</b>, tối đa <b>20 ký tự</b>.</li>
+            <li>Không chứa <b>khoảng trắng</b>.</li>
+            <li>Nên có cả chữ và số để tăng bảo mật.</li>
+        </ul>
+
+        <div class="password-wrapper">
+            <input type="password" id="new-pass" class="form-control" placeholder="Nhập mật khẩu mới">
+            <span class="toggle-password" onclick="togglePassword('new-pass', this)">👁️</span>
+        </div>
+        
+        <div class="password-wrapper">
+            <input type="password" id="confirm-pass" class="form-control" placeholder="Xác nhận mật khẩu mới">
+            <span class="toggle-password" onclick="togglePassword('confirm-pass', this)">👁️</span>
+        </div>
+        
         <button onclick="handleChangePass()" class="btn-primary" id="btnChangePass">CẬP NHẬT</button>
     </div>
 
@@ -70,8 +90,8 @@
             <option value="">-- Đang tải danh sách lớp --</option>
         </select>
 
-        <button onclick="handleAttendance()" class="btn-primary" id="btnSubmit">
-            <span>NHẤN ĐỂ ĐIỂM DANH</span>
+        <button onclick="handleAttendance()" class="btn-primary btn-scan" id="btnSubmit">
+            <span>👉 CHẠM ĐỂ ĐIỂM DANH</span>
         </button>
         <button onclick="logout()" class="btn-secondary">ĐĂNG XUẤT</button>
     </div>
