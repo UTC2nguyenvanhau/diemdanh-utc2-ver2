@@ -4,7 +4,21 @@
 const scriptURL = 'https://script.google.com/macros/s/AKfycbynGQ30GcS9Ww72xEDoIIZVhVEX_5eiGj0WgwxY9cd1PGoSg8m0wW36IQK9IRfUecbj/exec'; // <-- DÁN LINK APPS SCRIPT VÀO ĐÂY
 const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
-const fpPromise = FingerprintJS.load();
+
+// ==========================================
+// THUẬT TOÁN ANTI-CHEAT (TẠO ID NGẪU NHIÊN CỐ ĐỊNH)
+// ==========================================
+function getDeviceUUID() {
+    // 1. Kiểm tra xem máy này đã được cấp ID chưa
+    let uuid = localStorage.getItem('utc2_device_uuid');
+    
+    // 2. Nếu chưa có (Lần đầu mở web), tạo một mã ngẫu nhiên độc nhất vô nhị
+    if (!uuid) {
+        uuid = 'UTC2_DEV_' + Date.now().toString(36) + Math.random().toString(36).substring(2, 12);
+        localStorage.setItem('utc2_device_uuid', uuid); // Khóa chặt ID này vào máy
+    }
+    return uuid;
+}
 
 // ==========================================
 // ĐỔI GIAO DIỆN (Sáng/Tối) VÀ GHI NHỚ
@@ -151,7 +165,9 @@ function completeLogin(mssv, name) {
 
 function logout() {
     if(confirm("Bạn có chắc chắn muốn đăng xuất thiết bị này?")) {
-        localStorage.clear();
+        // Cố tình không xóa 'utc2_device_uuid' để lưu vết gian lận nếu có
+        localStorage.removeItem('utc2_mssv');
+        localStorage.removeItem('utc2_name');
         window.location.reload();
     }
 }
@@ -193,11 +209,10 @@ async function handleAttendance() {
 
     try {
         btn.disabled = true;
-        setStatus("🔒 Đang quét mã định danh thiết bị...", "normal", true);
+        setStatus("🔒 Đang thiết lập mã định danh an toàn...", "normal", true);
         
-        const fp = await fpPromise;
-        const fpResult = await fp.get();
-        const deviceId = fpResult.visitorId;
+        // Gọi hàm cấp ID ngẫu nhiên cố định thay vì FingerprintJS
+        const deviceId = getDeviceUUID();
 
         setStatus("🔍 Đang tìm Trạm điểm danh (Bật Bluetooth)...", "normal", true);
         const device = await navigator.bluetooth.requestDevice({
