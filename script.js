@@ -11,7 +11,7 @@ if ('serviceWorker' in navigator) {
 // CẤU HÌNH HỆ THỐNG
 // ==========================================
 // DÁN LINK APPS SCRIPT V3.0 (BẢN TRẢ VỀ JSON) VÀO ĐÂY:
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzyP5uGhs3iLrFUDWw12SCnogsizy18HBFmdlVh47n-fbQHHk5yxqpAfTD5DY8llPxj/exec'; 
+const scriptURL = 'https://script.google.com/macros/s/AKfycbyzBI6xN3rJjl0mV3Z7ney2mstqLUbnu3EZCmCpEGChfy4RxuxYWV9d7tf1CO6lFwp4/exec'; 
 const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
