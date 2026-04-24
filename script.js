@@ -250,28 +250,47 @@ function renderClassSelect(classesArray) {
 function loadClasses() { fetchClassesBackground(); } // Dự phòng
 
 // ==========================================
-// HỆ THỐNG ĐỒNG BỘ OFFLINE NGẦM
+// HỆ THỐNG ĐỒNG BỘ OFFLINE NGẦM (VÁ LỖI ANTI-CHEAT)
 // ==========================================
 async function syncOfflineData() {
     const offlineUrl = localStorage.getItem('utc2_offline_sync');
     if (!offlineUrl) return; 
 
     try {
-        console.log("Đang đồng bộ dữ liệu Offline...");
+        console.log("Đang đồng bộ dữ liệu Offline lên máy chủ...");
         const result = await fetchWithRetry(offlineUrl, 2, 5000);
         
-        if (result && result.success) {
+        if (result) {
+            // [QUAN TRỌNG] Dù Server báo Thành Công hay Bắt Lỗi, đều phải xóa nháp
+            // Để tránh việc App bị kẹt ở một vòng lặp đồng bộ vô tận
             localStorage.removeItem('utc2_offline_sync'); 
-            Swal.fire({
-                icon: 'success',
-                title: 'Đồng bộ hoàn tất',
-                text: 'Dữ liệu điểm danh offline của bạn đã được đẩy lên hệ thống trường!',
-                confirmButtonColor: '#003366'
-            });
-        }
-    } catch (e) { console.log("Đồng bộ ngầm thất bại, sẽ thử lại sau."); }
-}
 
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đồng bộ hoàn tất',
+                    text: 'Dữ liệu điểm danh offline của bạn đã được đẩy lên hệ thống trường!',
+                    confirmButtonColor: '#003366'
+                });
+            } else {
+                // XỬ LÝ LỘ MẶT GIAN LẬN KHI ĐỒNG BỘ OFFLINE
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Đồng Bộ Thất Bại!',
+                    html: `<b>Hệ thống trường từ chối dữ liệu:</b><br/>${result.message}<br/><br/><span style="color:#e74c3c; font-weight:bold;">${result.action}</span>`,
+                    confirmButtonColor: '#e74c3c'
+                });
+                
+                // Lấy mã lớp từ URL offline để ghi vào lịch sử thất bại
+                const classParams = new URLSearchParams(offlineUrl);
+                const offlineClassId = classParams.get('classId') || "Lớp ẩn";
+                addHistory(offlineClassId + " (Lỗi Đồng Bộ)", false);
+            }
+        }
+    } catch (e) { 
+        console.log("Đồng bộ ngầm thất bại do rớt mạng, sẽ thử lại sau."); 
+    }
+}
 // ==========================================
 // CORE: XỬ LÝ ĐIỂM DANH (BLE + API + OFFLINE)
 // ==========================================
