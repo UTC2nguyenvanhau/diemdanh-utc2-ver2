@@ -1,6 +1,6 @@
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(err => console.log('Lỗi cài App: ', err)); }); }
 
-const scriptURL = 'https://script.google.com/macros/s/AKfycbzvg-kiD3sdmuqGAP27M0Nkoim2jv2BPunXoyRkMzSRPEq4R51KdGAxElzzK5IOYe0b/exec'; 
+const scriptURL = 'https://script.google.com/macros/s/AKfycbyPuE-brwR5j_9YUf8YEObSzMzfUAhUxvqvXAZppw7MJoz-zlmMUJXOvc_ywnHXsH2s/exec'; 
 const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
 
