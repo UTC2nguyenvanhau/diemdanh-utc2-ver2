@@ -10,7 +10,6 @@ if ('serviceWorker' in navigator) {
 // ==========================================
 // CẤU HÌNH HỆ THỐNG
 // ==========================================
-// DÁN LINK APPS SCRIPT V3.0 (BẢN TRẢ VỀ JSON) VÀO ĐÂY:
 const scriptURL = 'https://script.google.com/macros/s/AKfycbyOy0tHt992Bui7MYsudz8cAD_trRHurzVtamLSjLHO--EJ2PKIZwnh3qlciW1iSjd0/exec'; 
 const SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const CHAR_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
@@ -28,22 +27,17 @@ function getDeviceUUID() {
 }
 
 // ==========================================
-// TÍNH NĂNG ẨN/HIỆN MẬT KHẨU
+// GIAO DIỆN & TÍNH NĂNG PHỤ
 // ==========================================
 function togglePassword(inputId, icon) {
     const input = document.getElementById(inputId);
     if (input.type === "password") {
-        input.type = "text";
-        icon.innerText = "🙈"; 
+        input.type = "text"; icon.innerText = "🙈"; 
     } else {
-        input.type = "password";
-        icon.innerText = "👁️";  
+        input.type = "password"; icon.innerText = "👁️";  
     }
 }
 
-// ==========================================
-// GIAO DIỆN & KIỂM TRA THIẾT BỊ
-// ==========================================
 function toggleTheme(checkbox) {
     if(checkbox.checked) {
         document.body.classList.add('dark-mode');
@@ -78,22 +72,56 @@ function checkDeviceType() {
 checkDeviceType();
 
 window.addEventListener('offline', () => { document.getElementById('offline-banner').style.display = 'block'; });
-window.addEventListener('online', () => { document.getElementById('offline-banner').style.display = 'none'; });
+window.addEventListener('online', () => { 
+    document.getElementById('offline-banner').style.display = 'none'; 
+    syncOfflineData();
+});
 
 // ==========================================
-// PHIÊN ĐĂNG NHẬP
+// THUẬT TOÁN AUTO-RETRY (THỬ LẠI KHI MẠNG YẾU)
+// ==========================================
+async function fetchWithRetry(url, retries = 3, timeoutMs = 5000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(id);
+            
+            if (!response.ok) throw new Error("Lỗi HTTP");
+            return await response.json(); 
+        } catch (err) {
+            if (i === retries - 1) throw err; 
+            setStatus(`⚠️ Mạng nghẽn! Đang thử lại lần ${i + 1}/${retries}...`, "error", true);
+            await new Promise(r => setTimeout(r, 2000)); 
+        }
+    }
+}
+
+// ==========================================
+// PHIÊN ĐĂNG NHẬP (KIẾN TRÚC 0 GIÂY)
 // ==========================================
 window.onload = () => {
     applySavedTheme(); 
+    syncOfflineData(); // Chạy đồng bộ nháp Offline nếu có
     
     const savedMssv = localStorage.getItem('utc2_mssv');
     const savedName = localStorage.getItem('utc2_name');
+    const savedClasses = localStorage.getItem('utc2_cached_classes');
     
     if (savedMssv && savedName) {
         showScreen('attendance-screen');
         document.getElementById('student-name').innerText = savedName;
         document.getElementById('student-mssv').innerText = savedMssv;
-        loadClasses(); 
+        
+        // Load danh sách lớp ngay lập tức từ Cache (0 giây)
+        if (savedClasses) {
+            renderClassSelect(JSON.parse(savedClasses));
+        } else {
+            document.getElementById('class-select').innerHTML = '<option value="">⏳ Đang đồng bộ lớp...</option>';
+        }
+        // Tải ngầm danh sách lớp mới
+        fetchClassesBackground(); 
     } else {
         showScreen('login-screen');
     }
@@ -111,7 +139,6 @@ function setStatus(text, type = "normal", isLoading = false) {
     const spinner = document.getElementById('spinner');
     statusEl.innerText = text;
     spinner.style.display = isLoading ? "block" : "none";
-    
     if (type === "error") statusEl.style.color = "var(--error)";
     else if (type === "success") statusEl.style.color = "var(--success)";
     else statusEl.style.color = "var(--primary-color)";
@@ -131,11 +158,9 @@ async function handleLogin() {
     try {
         const res = await fetch(`${scriptURL}?action=login&mssv=${mssv}&pass=${encodeURIComponent(pass)}`);
         const data = await res.json();
-
         if (data.success) {
             localStorage.setItem('temp_mssv', mssv);
             localStorage.setItem('temp_name', data.name);
-
             if (data.isFirstLogin) {
                 showScreen('change-pass-screen');
                 setStatus("Vui lòng đổi mật khẩu để tiếp tục", "error");
@@ -147,9 +172,7 @@ async function handleLogin() {
         }
     } catch (e) {
         setStatus("❌ Lỗi mạng, không thể kết nối server", "error");
-    } finally {
-        document.getElementById('btnLogin').disabled = false;
-    }
+    } finally { document.getElementById('btnLogin').disabled = false; }
 }
 
 async function handleChangePass() {
@@ -167,7 +190,6 @@ async function handleChangePass() {
     try {
         const res = await fetch(`${scriptURL}?action=changePass&mssv=${mssv}&newPass=${encodeURIComponent(newPass)}`);
         const msg = await res.text();
-        
         Swal.fire({ icon: 'success', title: 'Thành công', text: msg, confirmButtonColor: '#003366' });
         completeLogin(mssv, localStorage.getItem('temp_name'));
     } catch (e) {
@@ -196,38 +218,62 @@ function logout() {
         if (result.isConfirmed) {
             localStorage.removeItem('utc2_mssv');
             localStorage.removeItem('utc2_name');
+            localStorage.removeItem('utc2_cached_classes');
             window.location.reload();
         }
     })
 }
 
 // ==========================================
-// TẢI DANH SÁCH LỚP
+// TẢI DANH SÁCH LỚP (CHẠY NGẦM)
 // ==========================================
-async function loadClasses() {
-    const select = document.getElementById('class-select');
+async function fetchClassesBackground() {
     try {
-        const res = await fetch(`${scriptURL}?action=getClasses`);
-        const data = await res.json();
-        
-        if (data.success && data.classes.length > 0) {
-            select.innerHTML = '<option value="">-- Chọn lớp học phần --</option>';
-            data.classes.forEach(cls => {
-                let opt = document.createElement('option');
-                opt.value = cls;
-                opt.innerHTML = "📚 Lớp: " + cls;
-                select.appendChild(opt);
-            });
-        } else {
-            select.innerHTML = '<option value="">Không có lớp nào đang mở</option>';
+        const data = await fetchWithRetry(`${scriptURL}?action=getClasses`, 2, 5000);
+        if (data && data.success && data.classes.length > 0) {
+            localStorage.setItem('utc2_cached_classes', JSON.stringify(data.classes));
+            renderClassSelect(data.classes);
         }
-    } catch (e) {
-        select.innerHTML = '<option value="">Lỗi tải danh sách lớp</option>';
-    }
+    } catch (e) { console.log("Lỗi tải lớp ngầm."); }
+}
+
+function renderClassSelect(classesArray) {
+    const select = document.getElementById('class-select');
+    select.innerHTML = '<option value="">-- Chọn lớp học phần --</option>';
+    classesArray.forEach(cls => {
+        let opt = document.createElement('option');
+        opt.value = cls;
+        opt.innerHTML = "📚 Lớp: " + cls;
+        select.appendChild(opt);
+    });
+}
+function loadClasses() { fetchClassesBackground(); } // Dự phòng
+
+// ==========================================
+// HỆ THỐNG ĐỒNG BỘ OFFLINE NGẦM
+// ==========================================
+async function syncOfflineData() {
+    const offlineUrl = localStorage.getItem('utc2_offline_sync');
+    if (!offlineUrl) return; 
+
+    try {
+        console.log("Đang đồng bộ dữ liệu Offline...");
+        const result = await fetchWithRetry(offlineUrl, 2, 5000);
+        
+        if (result && result.success) {
+            localStorage.removeItem('utc2_offline_sync'); 
+            Swal.fire({
+                icon: 'success',
+                title: 'Đồng bộ hoàn tất',
+                text: 'Dữ liệu điểm danh offline của bạn đã được đẩy lên hệ thống trường!',
+                confirmButtonColor: '#003366'
+            });
+        }
+    } catch (e) { console.log("Đồng bộ ngầm thất bại, sẽ thử lại sau."); }
 }
 
 // ==========================================
-// XỬ LÝ ĐIỂM DANH BLE + GỌI API JSON
+// CORE: XỬ LÝ ĐIỂM DANH (BLE + API + OFFLINE)
 // ==========================================
 async function handleAttendance() {
     const mssv = localStorage.getItem('utc2_mssv');
@@ -249,6 +295,14 @@ async function handleAttendance() {
 
         setStatus("🔗 Đang giải mã ESP32...", "normal", true);
         const server = await device.gatt.connect();
+        
+        // [CỰC KỲ QUAN TRỌNG] Nhận diện iPhone để tránh văng kết nối
+        const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent);
+        if (isIOS) {
+            setStatus("⏳ Đang đồng bộ giao thức iOS...", "normal", true);
+            await new Promise(r => setTimeout(r, 1000)); 
+        }
+
         const service = await server.getPrimaryService(SERVICE_UUID);
         const characteristic = await service.getCharacteristic(CHAR_UUID);
 
@@ -256,7 +310,7 @@ async function handleAttendance() {
         const encoder = new TextEncoder();
         await characteristic.writeValue(encoder.encode(challenge.toString()));
         
-        await new Promise(r => setTimeout(r, 250)); 
+        if (isIOS) await new Promise(r => setTimeout(r, 500)); 
 
         const value = await characteristic.readValue();
         const response = new TextDecoder().decode(value);
@@ -265,80 +319,37 @@ async function handleAttendance() {
         setStatus("☁️ Đang đồng bộ Cloud trường...", "normal", true);
         const finalUrl = `${scriptURL}?action=checkin&classId=${encodeURIComponent(classId)}&mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
         
-        const apiResponse = await fetch(finalUrl);
-        const result = await apiResponse.json(); 
-        
-        btn.disabled = false;
-
-        // HIỂN THỊ POPUP CHI TIẾT
-        if (result.success) {
-            setStatus("🎉 Hoàn tất", "success");
-            addHistory(classId, true); 
-            
-            Swal.fire({
-                icon: result.type === 'ALREADY_DONE' ? 'info' : 'success',
-                title: result.title,
-                text: result.message,
-                confirmButtonColor: '#003366',
-                confirmButtonText: 'Đóng'
-            });
-        } else {
-            setStatus("⚠️ " + result.title, "error");
-            addHistory(classId, false); 
-            
-            Swal.fire({
-                icon: 'error',
-                title: result.title,
-                text: result.message,
-                footer: `<b style="color: #e74c3c;">Giải pháp: </b> &nbsp; ${result.action}`,
-                confirmButtonColor: '#e74c3c',
-                confirmButtonText: 'Đã hiểu'
-            });
-        }
-
-    } catch (err) {
-        btn.disabled = false;
-        setStatus("❌ Không quét được Trạm BLE!", "error");
-        Swal.fire({
-            icon: 'error',
-            title: 'Lỗi Kết Nối BLE',
-            text: 'Không thể giao tiếp với hộp ESP32. Hãy đứng gần thiết bị, bật Bluetooth và thử lại.',
-            confirmButtonColor: '#e74c3c'
-        });
-        console.error(err);
-    }
-    // ... (Giữ nguyên đoạn kết nối BLE ở trên) ...
-        
-        const value = await characteristic.readValue();
-        const response = new TextDecoder().decode(value);
-        device.gatt.disconnect();
-
-        setStatus("☁️ Đang đồng bộ Cloud trường...", "normal", true);
-        const finalUrl = `${scriptURL}?action=checkin&classId=${encodeURIComponent(classId)}&mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
-        
-        // [CẬP NHẬT] SỬ DỤNG VŨ KHÍ MỚI TẠI ĐÂY
+        // --- BƯỚC GỬI DỮ LIỆU LÊN GOOGLE ---
         try {
-            // Cố gắng gửi với 3 lần thử, mỗi lần đợi tối đa 5 giây
             const result = await fetchWithRetry(finalUrl, 3, 5000);
-            
             btn.disabled = false;
+            
             if (result.success) {
                 setStatus("🎉 Hoàn tất", "success");
                 addHistory(classId, true); 
-                showNotification(result); // Hiện popup SweetAlert2
+                Swal.fire({
+                    icon: result.type === 'ALREADY_DONE' ? 'info' : 'success',
+                    title: result.title,
+                    text: result.message,
+                    confirmButtonColor: '#003366',
+                    confirmButtonText: 'Đóng'
+                });
             } else {
                 setStatus("⚠️ " + result.title, "error");
                 addHistory(classId, false); 
-                showNotification(result);
+                Swal.fire({
+                    icon: 'error',
+                    title: result.title,
+                    text: result.message,
+                    footer: `<b style="color: #e74c3c;">Giải pháp: </b> &nbsp; ${result.action}`,
+                    confirmButtonColor: '#e74c3c',
+                    confirmButtonText: 'Đã hiểu'
+                });
             }
-            
         } catch (networkError) {
-            // NẾU THỬ 3 LẦN VẪN THẤT BẠI HOẶC MẤT MẠNG HOÀN TOÀN
+            // NẾU MẤT MẠNG -> LƯU OFFLINE VÀO ĐIỆN THOẠI
             btn.disabled = false;
-            
-            // Lưu Link gọi API vào kho Offline
             localStorage.setItem('utc2_offline_sync', finalUrl);
-            
             setStatus("📥 Đã lưu Offline", "error");
             addHistory(classId + " (Offline)", true);
             
@@ -351,6 +362,19 @@ async function handleAttendance() {
                 confirmButtonText: 'Đã hiểu'
             });
         }
+
+    } catch (err) {
+        // BẮT LỖI TỪ PHẦN CỨNG BLE (Mất kết nối, hủy quét...)
+        btn.disabled = false;
+        setStatus("❌ Không quét được Trạm BLE!", "error");
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi Kết Nối BLE',
+            text: 'Không thể giao tiếp với hộp ESP32. Hãy đứng gần thiết bị, bật Bluetooth và thử lại.',
+            confirmButtonColor: '#e74c3c'
+        });
+        console.error(err);
+    }
 }
 
 // ==========================================
@@ -382,57 +406,3 @@ document.onkeydown = function(e) {
     if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false; 
     if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
 }
-// ==========================================
-// THUẬT TOÁN AUTO-RETRY & TIMEOUT
-// ==========================================
-async function fetchWithRetry(url, retries = 3, timeoutMs = 5000) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            const controller = new AbortController();
-            const id = setTimeout(() => controller.abort(), timeoutMs);
-            
-            const response = await fetch(url, { signal: controller.signal });
-            clearTimeout(id);
-            
-            if (!response.ok) throw new Error("Lỗi HTTP");
-            return await response.json(); // Nếu thành công thì trả về data luôn
-            
-        } catch (err) {
-            if (i === retries - 1) throw err; // Nếu là lần cuối cùng thì quăng lỗi ra ngoài
-            
-            // Nếu chưa phải lần cuối, báo hiệu cho sinh viên và đợi 2s rồi thử lại
-            setStatus(`⚠️ Mạng nghẽn! Đang thử lại lần ${i + 1}/${retries}...`, "error", true);
-            await new Promise(r => setTimeout(r, 2000)); 
-        }
-    }
-}
-
-// ==========================================
-// HỆ THỐNG ĐỒNG BỘ OFFLINE NGẦM
-// ==========================================
-// Hàm này sẽ tự động chạy khi máy có mạng lại
-window.addEventListener('online', syncOfflineData);
-
-async function syncOfflineData() {
-    const offlineUrl = localStorage.getItem('utc2_offline_sync');
-    if (!offlineUrl) return; // Không có gì để đồng bộ
-
-    try {
-        console.log("Đang đồng bộ dữ liệu Offline...");
-        const result = await fetchWithRetry(offlineUrl, 2, 5000);
-        
-        if (result && result.success) {
-            localStorage.removeItem('utc2_offline_sync'); // Xóa nháp khi đã lên mây thành công
-            showNotification({
-                type: 'success',
-                title: 'Đồng bộ hoàn tất',
-                message: 'Dữ liệu điểm danh offline của bạn đã được đẩy lên hệ thống trường!'
-            });
-        }
-    } catch (e) {
-        console.log("Đồng bộ ngầm thất bại, sẽ thử lại sau.");
-    }
-}
-
-// Chạy thử 1 lần lúc vừa mở App (Lỡ sinh viên tắt App lúc đang mất mạng)
-window.addEventListener('load', syncOfflineData);
