@@ -356,8 +356,8 @@ async function handleAttendance() {
             Swal.fire({
                 icon: 'warning',
                 title: 'Mạng Quá Yếu!',
-                text: 'Mạch BLE đã xác thực thành công nhưng không thể kết nối tới Google. Hệ thống đã lưu tạm kết quả vào máy.',
-                footer: '<b style="color: #27ae60;">Hệ thống sẽ TỰ ĐỘNG ĐỒNG BỘ khi điện thoại có mạng trở lại. Bạn có thể vào lớp!</b>',
+                text: 'Mạch BLE đã xác thực thành công nhưng không thể kết nối tới Sever. Hệ thống đã lưu kết quả vào máy.',
+                footer: '<b style="color: #27ae60;">Hệ thống sẽ TỰ ĐỘNG ĐỒNG BỘ khi điện thoại có internet trở lại. Bạn có thể vào lớp!</b>',
                 confirmButtonColor: '#003366',
                 confirmButtonText: 'Đã hiểu'
             });
@@ -370,7 +370,7 @@ async function handleAttendance() {
         Swal.fire({
             icon: 'error',
             title: 'Lỗi Kết Nối BLE',
-            text: 'Không thể giao tiếp với hộp ESP32. Hãy đứng gần thiết bị, bật Bluetooth và thử lại.',
+            text: 'Không thể giao tiếp với ESP32. Hãy đứng gần thiết bị, bật Bluetooth và thử lại.',
             confirmButtonColor: '#e74c3c'
         });
         console.error(err);
