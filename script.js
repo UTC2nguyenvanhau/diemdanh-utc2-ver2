@@ -307,6 +307,50 @@ async function handleAttendance() {
         });
         console.error(err);
     }
+    // ... (Giữ nguyên đoạn kết nối BLE ở trên) ...
+        
+        const value = await characteristic.readValue();
+        const response = new TextDecoder().decode(value);
+        device.gatt.disconnect();
+
+        setStatus("☁️ Đang đồng bộ Cloud trường...", "normal", true);
+        const finalUrl = `${scriptURL}?action=checkin&classId=${encodeURIComponent(classId)}&mssv=${mssv}&challenge=${challenge}&response=${response}&deviceId=${deviceId}`;
+        
+        // [CẬP NHẬT] SỬ DỤNG VŨ KHÍ MỚI TẠI ĐÂY
+        try {
+            // Cố gắng gửi với 3 lần thử, mỗi lần đợi tối đa 5 giây
+            const result = await fetchWithRetry(finalUrl, 3, 5000);
+            
+            btn.disabled = false;
+            if (result.success) {
+                setStatus("🎉 Hoàn tất", "success");
+                addHistory(classId, true); 
+                showNotification(result); // Hiện popup SweetAlert2
+            } else {
+                setStatus("⚠️ " + result.title, "error");
+                addHistory(classId, false); 
+                showNotification(result);
+            }
+            
+        } catch (networkError) {
+            // NẾU THỬ 3 LẦN VẪN THẤT BẠI HOẶC MẤT MẠNG HOÀN TOÀN
+            btn.disabled = false;
+            
+            // Lưu Link gọi API vào kho Offline
+            localStorage.setItem('utc2_offline_sync', finalUrl);
+            
+            setStatus("📥 Đã lưu Offline", "error");
+            addHistory(classId + " (Offline)", true);
+            
+            Swal.fire({
+                icon: 'warning',
+                title: 'Mạng Quá Yếu!',
+                text: 'Mạch BLE đã xác thực thành công nhưng không thể kết nối tới Google. Hệ thống đã lưu tạm kết quả vào máy.',
+                footer: '<b style="color: #27ae60;">Hệ thống sẽ TỰ ĐỘNG ĐỒNG BỘ khi điện thoại có mạng trở lại. Bạn có thể vào lớp!</b>',
+                confirmButtonColor: '#003366',
+                confirmButtonText: 'Đã hiểu'
+            });
+        }
 }
 
 // ==========================================
@@ -338,3 +382,57 @@ document.onkeydown = function(e) {
     if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0))) return false; 
     if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
 }
+// ==========================================
+// THUẬT TOÁN AUTO-RETRY & TIMEOUT
+// ==========================================
+async function fetchWithRetry(url, retries = 3, timeoutMs = 5000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeoutMs);
+            
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(id);
+            
+            if (!response.ok) throw new Error("Lỗi HTTP");
+            return await response.json(); // Nếu thành công thì trả về data luôn
+            
+        } catch (err) {
+            if (i === retries - 1) throw err; // Nếu là lần cuối cùng thì quăng lỗi ra ngoài
+            
+            // Nếu chưa phải lần cuối, báo hiệu cho sinh viên và đợi 2s rồi thử lại
+            setStatus(`⚠️ Mạng nghẽn! Đang thử lại lần ${i + 1}/${retries}...`, "error", true);
+            await new Promise(r => setTimeout(r, 2000)); 
+        }
+    }
+}
+
+// ==========================================
+// HỆ THỐNG ĐỒNG BỘ OFFLINE NGẦM
+// ==========================================
+// Hàm này sẽ tự động chạy khi máy có mạng lại
+window.addEventListener('online', syncOfflineData);
+
+async function syncOfflineData() {
+    const offlineUrl = localStorage.getItem('utc2_offline_sync');
+    if (!offlineUrl) return; // Không có gì để đồng bộ
+
+    try {
+        console.log("Đang đồng bộ dữ liệu Offline...");
+        const result = await fetchWithRetry(offlineUrl, 2, 5000);
+        
+        if (result && result.success) {
+            localStorage.removeItem('utc2_offline_sync'); // Xóa nháp khi đã lên mây thành công
+            showNotification({
+                type: 'success',
+                title: 'Đồng bộ hoàn tất',
+                message: 'Dữ liệu điểm danh offline của bạn đã được đẩy lên hệ thống trường!'
+            });
+        }
+    } catch (e) {
+        console.log("Đồng bộ ngầm thất bại, sẽ thử lại sau.");
+    }
+}
+
+// Chạy thử 1 lần lúc vừa mở App (Lỡ sinh viên tắt App lúc đang mất mạng)
+window.addEventListener('load', syncOfflineData);
